@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #f8fafc; }
+button, a, input, select, textarea { transition: opacity .15s ease, border-color .15s ease, background-color .15s ease; }
+button:disabled { opacity: .55; cursor: not-allowed; }

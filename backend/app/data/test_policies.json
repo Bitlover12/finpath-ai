@@ -1,0 +1,206 @@
+[
+  {
+    "id": "TEST_SME_MATCH",
+    "name": "TEST SME Match Savings",
+    "description": "Synthetic policy used only for schema and engine tests.",
+    "min_age": 19,
+    "max_age": 34,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": null,
+        "max_income": 50000000
+      }
+    ],
+    "allowed_regions": [
+      "SEOUL",
+      "GYEONGGI"
+    ],
+    "allowed_company_sizes": [
+      "SME"
+    ],
+    "allowed_employment_types": [
+      "EMPLOYEE"
+    ],
+    "min_employment_months": 6,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 500000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": 30000000,
+        "rate": 0.1,
+        "monthly_contribution_cap": 500000,
+        "monthly_government_cap": 50000
+      },
+      {
+        "income_basis": "PERSONAL",
+        "max_income": 50000000,
+        "rate": 0.05,
+        "monthly_contribution_cap": 500000,
+        "monthly_government_cap": 25000
+      }
+    ],
+    "government_support_timing": "MONTHLY_ACCRUAL",
+    "government_support_interest_bearing": true,
+    "interest_rate": 0.04,
+    "tax_treatment": "TAX_FREE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": "2026-01-01",
+    "end_date": "2026-12-31",
+    "incompatible_policy_ids": [
+      "TEST_HOUSEHOLD_MATCH"
+    ],
+    "source_url": "https://example.com/finpath/test-sme-match",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T00:00:00Z",
+    "updated_at": "2026-08-30T00:00:00Z",
+    "manual_requirements": [],
+    "application_status": "OPEN",
+    "application_period_text": "Synthetic test policy"
+  },
+  {
+    "id": "TEST_HOUSEHOLD_MATCH",
+    "name": "TEST Household Match Savings",
+    "description": "Synthetic household-income policy used only for tests.",
+    "min_age": 19,
+    "max_age": 39,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": null,
+        "max_income": 60000000
+      },
+      {
+        "basis": "HOUSEHOLD",
+        "min_income": null,
+        "max_income": 80000000
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "FREELANCER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 300000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "HOUSEHOLD",
+        "max_income": 80000000,
+        "rate": 0.04,
+        "monthly_contribution_cap": 300000,
+        "monthly_government_cap": 12000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0.035,
+    "tax_treatment": "REDUCED",
+    "tax_rate_override": 0.05,
+    "duration_months": 24,
+    "start_date": "2026-01-01",
+    "end_date": "2026-12-31",
+    "incompatible_policy_ids": [
+      "TEST_SME_MATCH"
+    ],
+    "source_url": "https://example.com/finpath/test-household-match",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T00:00:00Z",
+    "updated_at": "2026-08-30T00:00:00Z",
+    "manual_requirements": [],
+    "application_status": "OPEN",
+    "application_period_text": "Synthetic test policy"
+  },
+  {
+    "id": "TEST_SEOUL_SAVER",
+    "name": "TEST Seoul Saver",
+    "description": "Synthetic region-limited savings product used only for tests.",
+    "min_age": 20,
+    "max_age": 35,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": null,
+        "max_income": 45000000
+      }
+    ],
+    "allowed_regions": [
+      "SEOUL"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": null,
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 50000,
+    "monthly_contribution_limit": 200000,
+    "government_contribution_tiers": null,
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0.045,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 12,
+    "start_date": "2026-01-01",
+    "end_date": "2026-12-31",
+    "incompatible_policy_ids": [],
+    "source_url": "https://example.com/finpath/test-seoul-saver",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T00:00:00Z",
+    "updated_at": "2026-08-30T00:00:00Z",
+    "manual_requirements": [],
+    "application_status": "OPEN",
+    "application_period_text": "Synthetic test policy"
+  },
+  {
+    "id": "TEST_LONG_TERM",
+    "name": "TEST Long Term Savings",
+    "description": "Synthetic long-duration policy for future horizon-filter tests.",
+    "min_age": 19,
+    "max_age": 34,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": null,
+        "max_income": 60000000
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": null,
+    "allowed_employment_types": null,
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 700000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": 60000000,
+        "rate": 0.03,
+        "monthly_contribution_cap": 700000,
+        "monthly_government_cap": 21000
+      }
+    ],
+    "government_support_timing": "MONTHLY_ACCRUAL",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0.04,
+    "tax_treatment": "TAX_FREE",
+    "tax_rate_override": null,
+    "duration_months": 120,
+    "start_date": "2026-01-01",
+    "end_date": "2026-12-31",
+    "incompatible_policy_ids": [],
+    "source_url": "https://example.com/finpath/test-long-term",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T00:00:00Z",
+    "updated_at": "2026-08-30T00:00:00Z",
+    "manual_requirements": [],
+    "application_status": "OPEN",
+    "application_period_text": "Synthetic test policy"
+  }
+]

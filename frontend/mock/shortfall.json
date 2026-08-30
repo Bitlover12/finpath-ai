@@ -1,0 +1,109 @@
+{
+  "profile": {
+    "age": 26,
+    "region": "SEOUL",
+    "employment_type": "EMPLOYEE",
+    "company_size": "SME",
+    "annual_income": 34000000,
+    "employment_months": 12,
+    "current_assets": 15000000,
+    "monthly_saving_capacity": 1000000,
+    "housing_status": "NO_HOME",
+    "household_income": null,
+    "marital_status": null,
+    "target_assets": 200000000,
+    "target_years": 9
+  },
+  "policy_analysis": [
+    {
+      "policy_id": "TEST_SME_MATCH",
+      "status": "ELIGIBLE",
+      "checks": [],
+      "missing_fields": [],
+      "standalone_contribution": 500000,
+      "incremental_benefit": 4000000,
+      "benefit_score": 8.0,
+      "selected_in_optimal_path": true,
+      "allocated_monthly_amount": 500000,
+      "optimization_exclusion_reason": null,
+      "policy_name": "TEST SME Match Savings",
+      "source_url": "https://example.com/finpath/test-sme-match",
+      "application_status": "OPEN",
+      "application_period_text": "Synthetic test policy"
+    }
+  ],
+  "excluded_policies": [],
+  "baseline": {
+    "initial_assets": 15000000,
+    "principal": 108000000,
+    "gross_interest": 15000000,
+    "tax_paid": 2310000,
+    "net_interest": 12690000,
+    "government_support": 0,
+    "tax_benefit": 0,
+    "final_assets": 135690000,
+    "trajectory": [
+      {
+        "month": 0,
+        "total_assets": 15000000
+      },
+      {
+        "month": 108,
+        "total_assets": 135690000
+      }
+    ]
+  },
+  "optimized": {
+    "initial_assets": 15000000,
+    "principal": 108000000,
+    "gross_interest": 17000000,
+    "tax_paid": 1800000,
+    "net_interest": 15200000,
+    "government_support": 3500000,
+    "tax_benefit": 818000,
+    "final_assets": 141700000,
+    "trajectory": [
+      {
+        "month": 0,
+        "total_assets": 15000000
+      },
+      {
+        "month": 108,
+        "total_assets": 141700000
+      }
+    ]
+  },
+  "policy_effect": {
+    "additional_assets": 6010000,
+    "goal_time_saved_months": null
+  },
+  "goal": {
+    "target_assets": 200000000,
+    "final_assets": 141700000,
+    "status": "SHORTFALL",
+    "shortfall": 58300000
+  },
+  "goal_seeking": {
+    "required_monthly_saving": 1500000,
+    "required_duration_months": 150,
+    "required_initial_assets": 65000000
+  },
+  "roadmap": [],
+  "assumptions": {
+    "calculation_date": "2026-08-30",
+    "baseline_annual_rate": 0.03,
+    "baseline_rate_source": "STEP2 MOCK ONLY",
+    "baseline_rate_source_url": "https://example.com/finpath/mock-rate",
+    "baseline_rate_checked_at": "2026-08-30",
+    "tax_basis": "GENERAL_RESIDENT_15_4",
+    "tax_timing": "AT_MATURITY",
+    "contribution_timing": "END_OF_MONTH",
+    "interest_method": "MONTHLY_COMPOUNDING_MOCK",
+    "policy_start_timing": "ALL_AT_MONTH_0",
+    "early_termination_assumed": false,
+    "policy_conditions_maintained": true,
+    "reinvestment_rate_basis": "BASELINE_CONFIG",
+    "reinvestment_tax_treatment": "TAXABLE",
+    "reinvestment_tax_timing": "AT_HORIZON_END"
+  }
+}

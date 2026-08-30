@@ -1,0 +1,850 @@
+[
+  {
+    "id": "YFS_GENERAL_2026",
+    "name": "청년미래적금 일반형 (2026)",
+    "description": "월 최대 50만원, 3년 만기, 정부기여 6% 및 이자소득 비과세. 기본금리 5%만 보수적으로 반영하며 기관별 우대금리는 반영하지 않습니다.",
+    "min_age": 19,
+    "max_age": 34,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": null,
+        "max_income": 60000000
+      }
+    ],
+    "manual_requirements": [
+      {
+        "id": "household_median_200",
+        "label": "가구 중위소득 200% 이하",
+        "description": "공식 심사 기준의 가구 중위소득 200% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "no_financial_income_comprehensive_tax",
+        "label": "금융소득종합과세 제한",
+        "description": "직전 3개년도 중 1회 이상 금융소득 종합과세 대상자가 아니어야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": null,
+    "monthly_contribution_limit": 500000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": 60000000,
+        "rate": 0.06,
+        "monthly_contribution_cap": 500000,
+        "monthly_government_cap": 30000
+      }
+    ],
+    "government_support_timing": "MONTHLY_ACCRUAL",
+    "government_support_interest_bearing": true,
+    "interest_rate": 0.05,
+    "tax_treatment": "TAX_FREE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "YFS_PREF_SME_EXISTING_2026",
+      "YFS_PREF_SME_NEW_2026",
+      "YFS_TAX_ONLY_2026"
+    ],
+    "source_url": "https://www.fsc.go.kr/po010101/87056",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "UPCOMING",
+    "application_period_text": "1차 모집 종료. 금융위가 2026년 9월 추가 가입기간 운영을 검토 중이며 구체 일정은 미확정입니다."
+  },
+  {
+    "id": "YFS_PREF_SME_EXISTING_2026",
+    "name": "청년미래적금 우대형 - 중소기업 재직 (2026)",
+    "description": "중소기업 재직 우대형. 월 최대 50만원, 정부기여 12%, 비과세. 기본금리 5%만 보수적으로 반영합니다.",
+    "min_age": 19,
+    "max_age": 34,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": null,
+        "max_income": 36000000
+      }
+    ],
+    "manual_requirements": [
+      {
+        "id": "household_median_150",
+        "label": "가구 중위소득 150% 이하",
+        "description": "중소기업 기존 재직 우대형은 가구 중위소득 150% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "eligible_sme_industry",
+        "label": "우대형 인정 중소기업 업종",
+        "description": "중소기업 인력지원 특별법령상 제한 업종이 아닌 재직자여야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "sme_29_month_maintenance",
+        "label": "우대형 재직 유지조건",
+        "description": "만기 한 달 전까지 총 29개월 이상 중소기업 재직 요건을 유지할 계획인지 확인합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "no_financial_income_comprehensive_tax",
+        "label": "금융소득종합과세 제한",
+        "description": "직전 3개년도 중 1회 이상 금융소득 종합과세 대상자가 아니어야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": [
+      "SME"
+    ],
+    "allowed_employment_types": [
+      "EMPLOYEE"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": null,
+    "monthly_contribution_limit": 500000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": 36000000,
+        "rate": 0.12,
+        "monthly_contribution_cap": 500000,
+        "monthly_government_cap": 60000
+      }
+    ],
+    "government_support_timing": "MONTHLY_ACCRUAL",
+    "government_support_interest_bearing": true,
+    "interest_rate": 0.05,
+    "tax_treatment": "TAX_FREE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "YFS_GENERAL_2026",
+      "YFS_PREF_SME_NEW_2026",
+      "YFS_TAX_ONLY_2026"
+    ],
+    "source_url": "https://www.fsc.go.kr/po010101/87056",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "UPCOMING",
+    "application_period_text": "1차 모집 종료. 금융위가 2026년 9월 추가 가입기간 운영을 검토 중이며 구체 일정은 미확정입니다."
+  },
+  {
+    "id": "YFS_PREF_SME_NEW_2026",
+    "name": "청년미래적금 우대형 - 중소기업 신규취업 (2026)",
+    "description": "2025년 중소기업 신규취업자 우대형. 월 최대 50만원, 정부기여 12%, 비과세. 기본금리 5%만 반영합니다.",
+    "min_age": 19,
+    "max_age": 34,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": null,
+        "max_income": 60000000
+      }
+    ],
+    "manual_requirements": [
+      {
+        "id": "household_median_200",
+        "label": "가구 중위소득 200% 이하",
+        "description": "공식 심사 기준의 가구 중위소득 200% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "no_financial_income_comprehensive_tax",
+        "label": "금융소득종합과세 제한",
+        "description": "직전 3개년도 중 1회 이상 금융소득 종합과세 대상자가 아니어야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "new_sme_hire_2025",
+        "label": "2025년 중소기업 신규취업 요건",
+        "description": "2025년 1~12월 최초 취업자이거나 해당 기업 취업 전 고용보험 가입기간 합계가 1년 미만인 신규취업 요건을 충족해야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "eligible_sme_industry",
+        "label": "우대형 인정 중소기업 업종",
+        "description": "중소기업 인력지원 특별법령상 제한 업종이 아닌 재직자여야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": [
+      "SME"
+    ],
+    "allowed_employment_types": [
+      "EMPLOYEE"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": null,
+    "monthly_contribution_limit": 500000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": 60000000,
+        "rate": 0.12,
+        "monthly_contribution_cap": 500000,
+        "monthly_government_cap": 60000
+      }
+    ],
+    "government_support_timing": "MONTHLY_ACCRUAL",
+    "government_support_interest_bearing": true,
+    "interest_rate": 0.05,
+    "tax_treatment": "TAX_FREE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "YFS_GENERAL_2026",
+      "YFS_PREF_SME_EXISTING_2026",
+      "YFS_TAX_ONLY_2026"
+    ],
+    "source_url": "https://www.fsc.go.kr/po010101/87056",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "UPCOMING",
+    "application_period_text": "1차 모집 종료. 금융위가 2026년 9월 추가 가입기간 운영을 검토 중이며 구체 일정은 미확정입니다."
+  },
+  {
+    "id": "YFS_TAX_ONLY_2026",
+    "name": "청년미래적금 비과세형 - 기여금 미대상 (2026)",
+    "description": "총급여 6천만원 초과~7천5백만원 이하 구간. 정부기여금 없이 이자소득 비과세만 적용. 기본금리 5%만 반영합니다.",
+    "min_age": 19,
+    "max_age": 34,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": 60000001,
+        "max_income": 75000000
+      }
+    ],
+    "manual_requirements": [
+      {
+        "id": "household_median_200",
+        "label": "가구 중위소득 200% 이하",
+        "description": "공식 심사 기준의 가구 중위소득 200% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      },
+      {
+        "id": "no_financial_income_comprehensive_tax",
+        "label": "금융소득종합과세 제한",
+        "description": "직전 3개년도 중 1회 이상 금융소득 종합과세 대상자가 아니어야 합니다.",
+        "source_url": "https://www.fsc.go.kr/po010101/87056"
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": null,
+    "monthly_contribution_limit": 500000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": 75000000,
+        "rate": 0,
+        "monthly_contribution_cap": 500000,
+        "monthly_government_cap": 0
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0.05,
+    "tax_treatment": "TAX_FREE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "YFS_GENERAL_2026",
+      "YFS_PREF_SME_EXISTING_2026",
+      "YFS_PREF_SME_NEW_2026"
+    ],
+    "source_url": "https://www.fsc.go.kr/po010101/87056",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "UPCOMING",
+    "application_period_text": "1차 모집 종료. 금융위가 2026년 9월 추가 가입기간 운영을 검토 중이며 구체 일정은 미확정입니다."
+  },
+  {
+    "id": "SEOUL_HOPE_DOUBLE_24M_2026",
+    "name": "서울시 희망두배 청년통장 2년형 (2026)",
+    "description": "월 15만원을 저축하면 서울시가 동일 금액을 매칭하는 자산형성 사업. 공시 페이지의 이자율이 수치로 제시되지 않아 상품이자는 0%로 보수적으로 계산합니다.",
+    "min_age": 18,
+    "max_age": 34,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "work_history",
+        "label": "근로기간 요건",
+        "description": "최근 1년 내 3개월 이상 근로했거나 현재 3개월 이상 근로 중이어야 합니다.",
+        "source_url": "https://news.seoul.go.kr/welfare/archives/581505"
+      },
+      {
+        "id": "personal_monthly_income_255",
+        "label": "본인 월평균 근로소득",
+        "description": "세전 월평균 근로소득 255만원 이하 요건을 충족해야 합니다.",
+        "source_url": "https://news.seoul.go.kr/welfare/archives/581505"
+      },
+      {
+        "id": "supporter_income_assets",
+        "label": "부양의무자 소득·재산",
+        "description": "부모·배우자 소득 연 1억원 미만 및 재산 9억원 미만 요건을 충족해야 합니다.",
+        "source_url": "https://news.seoul.go.kr/welfare/archives/581505"
+      }
+    ],
+    "allowed_regions": [
+      "SEOUL"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 150000,
+    "monthly_contribution_limit": 150000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1.0,
+        "monthly_contribution_cap": 150000,
+        "monthly_government_cap": 150000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 24,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "SEOUL_HOPE_DOUBLE_36M_2026"
+    ],
+    "source_url": "https://news.seoul.go.kr/welfare/archives/581505",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026-06-08 ~ 2026-06-19 모집 종료"
+  },
+  {
+    "id": "SEOUL_HOPE_DOUBLE_36M_2026",
+    "name": "서울시 희망두배 청년통장 3년형 (2026)",
+    "description": "월 15만원을 저축하면 서울시가 동일 금액을 매칭하는 자산형성 사업. 공시 페이지의 이자율이 수치로 제시되지 않아 상품이자는 0%로 보수적으로 계산합니다.",
+    "min_age": 18,
+    "max_age": 34,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "work_history",
+        "label": "근로기간 요건",
+        "description": "최근 1년 내 3개월 이상 근로했거나 현재 3개월 이상 근로 중이어야 합니다.",
+        "source_url": "https://news.seoul.go.kr/welfare/archives/581505"
+      },
+      {
+        "id": "personal_monthly_income_255",
+        "label": "본인 월평균 근로소득",
+        "description": "세전 월평균 근로소득 255만원 이하 요건을 충족해야 합니다.",
+        "source_url": "https://news.seoul.go.kr/welfare/archives/581505"
+      },
+      {
+        "id": "supporter_income_assets",
+        "label": "부양의무자 소득·재산",
+        "description": "부모·배우자 소득 연 1억원 미만 및 재산 9억원 미만 요건을 충족해야 합니다.",
+        "source_url": "https://news.seoul.go.kr/welfare/archives/581505"
+      }
+    ],
+    "allowed_regions": [
+      "SEOUL"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 150000,
+    "monthly_contribution_limit": 150000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1.0,
+        "monthly_contribution_cap": 150000,
+        "monthly_government_cap": 150000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "SEOUL_HOPE_DOUBLE_24M_2026"
+    ],
+    "source_url": "https://news.seoul.go.kr/welfare/archives/581505",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026-06-08 ~ 2026-06-19 모집 종료"
+  },
+  {
+    "id": "INCHEON_DREAMFOR_2026",
+    "name": "인천 드림For청년통장 (2026)",
+    "description": "인천 재직청년이 월 15만원씩 36개월 저축하면 시 지원금을 더해 목돈 형성을 지원하는 사업. 공식 수치로 확인되지 않은 예금이자는 0%로 보수적으로 계산합니다.",
+    "min_age": 18,
+    "max_age": 39,
+    "income_conditions": [
+      {
+        "basis": "PERSONAL",
+        "min_income": 21900000,
+        "max_income": 40000000
+      }
+    ],
+    "manual_requirements": [
+      {
+        "id": "same_employer_since_2025",
+        "label": "동일기업 재직기간",
+        "description": "2025-01-01부터 신청일까지 동일기업에 재직하는 요건을 충족해야 합니다.",
+        "source_url": "https://youth.incheon.go.kr/financial/dreamfor.jsp"
+      },
+      {
+        "id": "insurance_and_hours",
+        "label": "4대보험·근로시간",
+        "description": "4대보험 가입 및 주 35시간 이상 근로 등 공고의 고용요건을 충족해야 합니다.",
+        "source_url": "https://youth.incheon.go.kr/financial/dreamfor.jsp"
+      }
+    ],
+    "allowed_regions": [
+      "INCHEON"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 150000,
+    "monthly_contribution_limit": 150000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1.0,
+        "monthly_contribution_cap": 150000,
+        "monthly_government_cap": 150000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [],
+    "source_url": "https://youth.incheon.go.kr/financial/dreamfor.jsp",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026-05-04 ~ 2026-05-15 모집 종료"
+  },
+  {
+    "id": "BUSAN_DOUBLE_24M_2026",
+    "name": "부산청년 기쁨두배통장 2년형 (2026)",
+    "description": "월 10만원을 저축하면 부산시가 1:1로 매칭하는 자산형성 사업. 공개 공고에서 확정 금리 수치가 확인되지 않아 상품이자는 0%로 계산합니다.",
+    "min_age": 18,
+    "max_age": 39,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "median_income_150_insurance",
+        "label": "본인 기준중위소득 150% 이하",
+        "description": "건강보험료 등을 기준으로 한 본인 기준중위소득 150% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.busan.go.kr/nbgosi/view?gosiGbn=A&sno=78998"
+      },
+      {
+        "id": "working_requirement",
+        "label": "근로 요건",
+        "description": "직장인·자영업자·일용직 등 공고상 근로 요건을 충족해야 합니다.",
+        "source_url": "https://www.busan.go.kr/nbgosi/view?gosiGbn=A&sno=78998"
+      }
+    ],
+    "allowed_regions": [
+      "BUSAN"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 100000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1,
+        "monthly_contribution_cap": 100000,
+        "monthly_government_cap": 100000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 24,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "BUSAN_DOUBLE_36M_2026"
+    ],
+    "source_url": "https://www.busan.go.kr/nbgosi/view?gosiGbn=A&sno=78998",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026-08-10 ~ 2026-08-21 모집 종료"
+  },
+  {
+    "id": "BUSAN_DOUBLE_36M_2026",
+    "name": "부산청년 기쁨두배통장 3년형 (2026)",
+    "description": "월 10만원을 저축하면 부산시가 1:1로 매칭하는 자산형성 사업. 공개 공고에서 확정 금리 수치가 확인되지 않아 상품이자는 0%로 계산합니다.",
+    "min_age": 18,
+    "max_age": 39,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "median_income_150_insurance",
+        "label": "본인 기준중위소득 150% 이하",
+        "description": "건강보험료 등을 기준으로 한 본인 기준중위소득 150% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.busan.go.kr/nbgosi/view?gosiGbn=A&sno=78998"
+      },
+      {
+        "id": "working_requirement",
+        "label": "근로 요건",
+        "description": "직장인·자영업자·일용직 등 공고상 근로 요건을 충족해야 합니다.",
+        "source_url": "https://www.busan.go.kr/nbgosi/view?gosiGbn=A&sno=78998"
+      }
+    ],
+    "allowed_regions": [
+      "BUSAN"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 100000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1,
+        "monthly_contribution_cap": 100000,
+        "monthly_government_cap": 100000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [
+      "BUSAN_DOUBLE_24M_2026"
+    ],
+    "source_url": "https://www.busan.go.kr/nbgosi/view?gosiGbn=A&sno=78998",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026-08-10 ~ 2026-08-21 모집 종료"
+  },
+  {
+    "id": "JEONBUK_DOUBLE_2026",
+    "name": "전북청년 함께 두배적금 (2026)",
+    "description": "월 10만원을 24개월 저축하면 전북이 월 10만원을 매칭하는 자산형성 사업. 별도 공시 금리 수치가 없어 상품이자는 0%로 계산합니다.",
+    "min_age": 18,
+    "max_age": 39,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "household_median_140",
+        "label": "가구 기준중위소득 140% 이하",
+        "description": "건강보험료 기준 가구 중위소득 140% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.jeonbuk.go.kr/index.jeonbuk?menuCd=DOM_000000104006005003"
+      },
+      {
+        "id": "jeonbuk_work_rule",
+        "label": "전북 근로·사업 요건",
+        "description": "공고 기준 근로자는 계속근로·주당 근로시간, 사업자는 사업기간 등 세부 근로요건을 충족해야 합니다.",
+        "source_url": "https://www.jeonbuk.go.kr/index.jeonbuk?menuCd=DOM_000000104006005003"
+      }
+    ],
+    "allowed_regions": [
+      "JEONBUK"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 100000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1,
+        "monthly_contribution_cap": 100000,
+        "monthly_government_cap": 100000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 24,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [],
+    "source_url": "https://www.jeonbuk.go.kr/index.jeonbuk?menuCd=DOM_000000104006005003",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026년 모집 종료"
+  },
+  {
+    "id": "JEONNAM_HOPE_2026",
+    "name": "전남 청년 희망디딤돌 통장 (2026)",
+    "description": "월 10만원을 36개월 저축하면 전남이 월 10만원을 매칭하는 자산형성 사업. 확정 금리 수치 미확인으로 상품이자는 0%로 계산합니다.",
+    "min_age": 18,
+    "max_age": 45,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "household_median_120",
+        "label": "가구 기준중위소득 120% 이하",
+        "description": "가구 기준중위소득 120% 이하 요건을 충족해야 합니다.",
+        "source_url": "https://www.jeonnam.go.kr/contentsView.do?menuId=brand0401000000"
+      },
+      {
+        "id": "jeonnam_work_rule",
+        "label": "전남 근로·사업 요건",
+        "description": "공고의 도내 노동자·사업자 세부 자격요건을 충족해야 합니다.",
+        "source_url": "https://www.jeonnam.go.kr/contentsView.do?menuId=brand0401000000"
+      }
+    ],
+    "allowed_regions": [
+      "JEONNAM"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 100000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1,
+        "monthly_contribution_cap": 100000,
+        "monthly_government_cap": 100000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [],
+    "source_url": "https://www.jeonnam.go.kr/contentsView.do?menuId=brand0401000000",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026년 모집 종료"
+  },
+  {
+    "id": "DAEJEON_FUTURE_DOUBLE_2026",
+    "name": "대전 미래두배 청년통장 (2026 세부공고 확인필요)",
+    "description": "대전의 청년 자산형성 매칭통장. 2026년 계속사업은 확인되지만 이번 데이터 기준 상세 신규모집 공고가 확정되지 않아 Optimizer에는 넣지 않습니다.",
+    "min_age": 18,
+    "max_age": 39,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "final_2026_notice",
+        "label": "2026 최종 모집공고 확인",
+        "description": "2026 신규모집의 정확한 소득·근로·신청기간 조건은 최종 공고 확인이 필요합니다.",
+        "source_url": "https://www.daejeon.go.kr/edp/EdpContentsHtmlView.do?menuSeq=7462"
+      }
+    ],
+    "allowed_regions": [
+      "DAEJEON"
+    ],
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 150000,
+    "monthly_contribution_limit": 150000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1,
+        "monthly_contribution_cap": 150000,
+        "monthly_government_cap": 150000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 24,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [],
+    "source_url": "https://www.daejeon.go.kr/edp/EdpContentsHtmlView.do?menuSeq=7462",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CHECK_REQUIRED",
+    "application_period_text": "2026 세부 모집일정 최종 확인 필요"
+  },
+  {
+    "id": "ARTIST_SAVINGS_2026",
+    "name": "청년예술인 예술활동 적립계좌 (2026)",
+    "description": "월 10만원 정액을 24개월 저축하면 실제 납입액만큼 정부지원금을 만기에 지원하는 청년예술인 자산형성 사업. 별도 금리 수치가 없어 상품이자는 0%로 계산합니다.",
+    "min_age": 18,
+    "max_age": 39,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "artist_certification",
+        "label": "예술활동증명",
+        "description": "신청일 기준 유효한 예술활동증명을 완료한 예술인이어야 합니다.",
+        "source_url": "https://www.kawf.kr/notice/sub01View.do?selIdx=19285"
+      },
+      {
+        "id": "personal_median_120",
+        "label": "개인 중위소득 120% 이하",
+        "description": "소득금액증명원 기준 개인 중위소득 120% 이내 요건을 충족해야 합니다.",
+        "source_url": "https://www.kawf.kr/notice/sub01View.do?selIdx=19285"
+      },
+      {
+        "id": "education_and_exclusions",
+        "label": "교육·중복수혜 제한",
+        "description": "필수 예방교육 수료 및 2025 선정자/2026 예술활동준비금 등 공고상 참여제한을 충족해야 합니다.",
+        "source_url": "https://www.kawf.kr/notice/sub01View.do?selIdx=19285"
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": null,
+    "allowed_employment_types": null,
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 100000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 1,
+        "monthly_contribution_cap": 100000,
+        "monthly_government_cap": 100000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 24,
+    "start_date": null,
+    "end_date": null,
+    "incompatible_policy_ids": [],
+    "source_url": "https://www.kawf.kr/notice/sub01View.do?selIdx=19285",
+    "effective_date": "2026-01-01",
+    "checked_at": "2026-08-30T03:20:00+09:00",
+    "updated_at": "2026-08-30T03:20:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026-02-04 접수 개시 후 예산 소진으로 조기 마감"
+  }
+]

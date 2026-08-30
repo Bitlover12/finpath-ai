@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "INVALID_PROFILE",
+    "message": "연봉 값을 확인해주세요.",
+    "details": {}
+  }
+}

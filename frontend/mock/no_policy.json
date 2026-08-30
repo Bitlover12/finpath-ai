@@ -1,0 +1,74 @@
+{
+  "profile": {
+    "age": 45,
+    "region": "BUSAN",
+    "employment_type": "EMPLOYEE",
+    "company_size": "LARGE",
+    "annual_income": 80000000,
+    "employment_months": 60,
+    "current_assets": 15000000,
+    "monthly_saving_capacity": 1000000,
+    "housing_status": "HOME_OWNER",
+    "household_income": 120000000,
+    "marital_status": "MARRIED",
+    "target_assets": 200000000,
+    "target_years": 9
+  },
+  "policy_analysis": [],
+  "excluded_policies": [],
+  "baseline": {
+    "initial_assets": 15000000,
+    "principal": 108000000,
+    "gross_interest": 15000000,
+    "tax_paid": 2310000,
+    "net_interest": 12690000,
+    "government_support": 0,
+    "tax_benefit": 0,
+    "final_assets": 135690000,
+    "trajectory": []
+  },
+  "optimized": {
+    "initial_assets": 15000000,
+    "principal": 108000000,
+    "gross_interest": 15000000,
+    "tax_paid": 2310000,
+    "net_interest": 12690000,
+    "government_support": 0,
+    "tax_benefit": 0,
+    "final_assets": 135690000,
+    "trajectory": []
+  },
+  "policy_effect": {
+    "additional_assets": 0,
+    "goal_time_saved_months": null
+  },
+  "goal": {
+    "target_assets": 200000000,
+    "final_assets": 135690000,
+    "status": "SHORTFALL",
+    "shortfall": 64310000
+  },
+  "goal_seeking": {
+    "required_monthly_saving": 1550000,
+    "required_duration_months": 160,
+    "required_initial_assets": 70000000
+  },
+  "roadmap": [],
+  "assumptions": {
+    "calculation_date": "2026-08-30",
+    "baseline_annual_rate": 0.03,
+    "baseline_rate_source": "STEP2 MOCK ONLY",
+    "baseline_rate_source_url": "https://example.com/finpath/mock-rate",
+    "baseline_rate_checked_at": "2026-08-30",
+    "tax_basis": "GENERAL_RESIDENT_15_4",
+    "tax_timing": "AT_MATURITY",
+    "contribution_timing": "END_OF_MONTH",
+    "interest_method": "MONTHLY_COMPOUNDING_MOCK",
+    "policy_start_timing": "ALL_AT_MONTH_0",
+    "early_termination_assumed": false,
+    "policy_conditions_maintained": true,
+    "reinvestment_rate_basis": "BASELINE_CONFIG",
+    "reinvestment_tax_treatment": "TAXABLE",
+    "reinvestment_tax_timing": "AT_HORIZON_END"
+  }
+}
