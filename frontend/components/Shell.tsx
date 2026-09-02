@@ -7,11 +7,11 @@ export function Shell({ children }: { children: ReactNode }) {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="text-xl font-black tracking-tight">FinPath</Link>
-          <nav className="flex gap-5 text-sm font-semibold text-slate-600">
+          <nav className="flex gap-4 text-sm font-semibold text-slate-600 sm:gap-5">
             <Link href="/profile">내 정보</Link>
-            <Link href="/analysis">정책 분석</Link>
-            <Link href="/dashboard">대시보드</Link>
-            <Link href="/scenario">What-if</Link>
+            <Link href="/analysis">정책 근거</Link>
+            <Link href="/dashboard">비교 결과</Link>
+            <Link href="/scenario">조건 변경</Link>
           </nav>
         </div>
       </header>
