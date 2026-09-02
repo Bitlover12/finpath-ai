@@ -28,7 +28,7 @@ export default function HomePage() {
         <div className="max-w-4xl pt-20">
           <p className="text-sm font-bold tracking-[0.28em] text-slate-400">FINPATH · 청년 자산형성 금융 네비게이터</p>
           <h1 className="mt-5 text-5xl font-black tracking-tight sm:text-7xl">그냥 저축할 때보다,<br />얼마나 더 만들 수 있을까요?</h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300">내 조건과 월 저축 여력을 입력하면 일반저축과 정책 활용 경로를 같은 기준으로 계산해, <b className="text-white">9년 뒤 자산 차이와 매월 어디에 얼마를 넣을지</b>까지 보여드립니다.</p>
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300">내 조건과 월 저축 여력을 입력하면 일반저축과 정책 활용 경로를 같은 기준으로 계산하고, <b className="text-white">정책 자격·월 배분·정부지원·세금·만기 재예치·목표 역산</b>까지 한 번에 보여줍니다.</p>
           <div className="mt-10 flex flex-wrap gap-3"><Link href="/profile" className="rounded-xl bg-white px-6 py-3 font-bold text-slate-950">내 정보로 바로 비교하기</Link><button onClick={() => demo("A")} disabled={!!loading} className="rounded-xl border border-slate-600 px-6 py-3 font-bold">{loading === "A" ? "계산 중..." : "목표 달성 데모 보기"}</button></div>
           {error && <p className="mt-4 text-sm text-rose-300">Backend 연결 오류: {error}</p>}
         </div>

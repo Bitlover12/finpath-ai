@@ -6,13 +6,15 @@ import { AssetChart } from "../../components/AssetChart";
 import { Shell } from "../../components/Shell";
 import { manWon, monthsText } from "../../lib/format";
 import { applicationLabel, roadmapTypeLabel } from "../../lib/labels";
-import { loadAnalysis } from "../../lib/storage";
-import type { AnalyzeResponse } from "../../lib/types";
+import { loadAnalysis, loadSpendingOptimization } from "../../lib/storage";
+import type { AnalyzeResponse, SpendingOptimizationResponse } from "../../lib/types";
 
 function signedMoney(value:number){ return `${value>=0?"+":"-"}${manWon(Math.abs(value))}`; }
 
 export default function DashboardPage(){
- const [r,setR]=useState<AnalyzeResponse|null>(null); useEffect(()=>setR(loadAnalysis()),[]);
+ const [r,setR]=useState<AnalyzeResponse|null>(null);
+ const [full,setFull]=useState<SpendingOptimizationResponse|null>(null);
+ useEffect(()=>{ setR(loadAnalysis()); setFull(loadSpendingOptimization()); },[]);
  if(!r)return <Shell><p>분석 결과가 없습니다. <Link href="/profile" className="font-bold underline">분석 시작</Link></p></Shell>;
 
  const gs=r.goal_seeking;
@@ -45,6 +47,7 @@ export default function DashboardPage(){
     <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"><p className="text-sm font-bold text-slate-500">왜 차이가 나나요?</p><h2 className="mt-1 text-2xl font-black">추가자산 {signedMoney(additional)}의 구성</h2><div className="mt-6 grid gap-3 sm:grid-cols-3"><div className="rounded-2xl bg-emerald-50 p-4"><span className="text-xs font-semibold text-emerald-800">정부지원</span><b className="mt-1 block text-xl">+{manWon(r.optimized.government_support)}</b></div><div className="rounded-2xl bg-blue-50 p-4"><span className="text-xs font-semibold text-blue-800">절세효과</span><b className="mt-1 block text-xl">+{manWon(r.optimized.tax_benefit)}</b></div><div className="rounded-2xl bg-slate-100 p-4"><span className="text-xs font-semibold text-slate-600">이자·배분·재예치 효과</span><b className="mt-1 block text-xl">{signedMoney(otherEffect)}</b></div></div><p className="mt-4 text-xs leading-5 text-slate-400">마지막 항목은 전체 추가효과에서 정부지원과 절세효과를 제외한 차이로, 정책별 금리·납입시점·일반저축 기회비용·만기 재예치 효과를 함께 포함합니다.</p></section>
   </div>
 
+
   <section className="mt-8"><div className="mb-3 flex items-end justify-between"><div><p className="text-sm font-bold text-slate-500">자산 변화</p><h2 className="mt-1 text-2xl font-black">시간이 지날수록 차이가 어떻게 벌어지는지 확인하세요.</h2></div></div><AssetChart result={r}/></section>
 
   <div className="mt-8 grid gap-6 lg:grid-cols-2">
@@ -54,6 +57,19 @@ export default function DashboardPage(){
   </div>
 
   <section className="mt-8 rounded-3xl border bg-white p-6"><p className="text-sm font-bold text-slate-500">실행 로드맵</p><h2 className="mt-1 text-2xl font-black">앞으로 돈이 어디로 이동하는지 한눈에 봅니다.</h2><div className="mt-5 space-y-3">{r.roadmap.map((x,i)=><div key={`${x.type}-${i}`} className="flex flex-col justify-between gap-2 rounded-2xl bg-slate-50 p-4 sm:flex-row"><div><b>{x.product_name}</b><p className="text-sm text-slate-500">{roadmapTypeLabel[x.type]||x.type}</p></div><div className="text-sm sm:text-right"><b>{x.start_month} ~ {x.end_month}</b><p className="text-slate-500">{x.monthly_amount?`월 ${manWon(x.monthly_amount)}`:x.type==="MATURITY_REINVESTMENT"?`${manWon(x.initial_amount)} 재예치`:""}</p></div></div>)}</div></section>
+
+  {full ? <section id="full-finpath" className="mt-10 overflow-hidden rounded-3xl border border-emerald-300 bg-emerald-950 p-7 text-white shadow-lg md:p-9">
+    <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-bold text-emerald-200">최종 비교 · Full FinPath</p><h2 className="mt-2 text-3xl font-black md:text-4xl">저축경로 최적화에 소비·카드 최적화까지 더하면?</h2><p className="mt-3 max-w-3xl text-sm leading-6 text-emerald-100">기본 FinPath 분석은 그대로 보존하고, 선택형 부가서비스에서 만든 추가 저축여력만 더해 같은 목표기간으로 다시 계산했습니다.</p></div><Link href="/spending" className="rounded-xl border border-emerald-700 bg-emerald-900 px-4 py-3 text-sm font-bold">소비 분석 다시하기</Link></div>
+    <div className="mt-7 grid gap-3 lg:grid-cols-3">
+      <div className="rounded-2xl bg-white/10 p-5"><span className="text-xs font-bold text-emerald-200">1 · 일반저축</span><p className="mt-2 text-sm text-emerald-100">현재 월 저축액을 일반저축에만 적립</p><b className="mt-4 block text-3xl">{manWon(r.baseline.final_assets)}</b><p className="mt-2 text-xs text-emerald-200">월 {manWon(r.profile.monthly_saving_capacity)}</p></div>
+      <div className="rounded-2xl bg-white/15 p-5"><span className="text-xs font-bold text-emerald-200">2 · 기본 FinPath</span><p className="mt-2 text-sm text-emerald-100">같은 저축액으로 정책·월배분·재예치 최적화</p><b className="mt-4 block text-3xl">{manWon(r.optimized.final_assets)}</b><p className="mt-2 text-sm font-bold text-emerald-200">일반저축 대비 {signedMoney(r.optimized.final_assets-r.baseline.final_assets)}</p></div>
+      <div className="rounded-2xl bg-white p-5 text-slate-950"><span className="text-xs font-bold text-emerald-800">3 · Full FinPath</span><p className="mt-2 text-sm text-slate-600">소비·카드로 저축여력까지 늘린 뒤 전체 경로 재계산</p><b className="mt-4 block text-3xl">{manWon(full.enhanced_analysis.optimized.final_assets)}</b><p className="mt-2 text-sm font-black text-emerald-800">일반저축 대비 {signedMoney(full.enhanced_analysis.optimized.final_assets-r.baseline.final_assets)}</p><p className="mt-1 text-xs font-bold text-slate-500">기본 FinPath보다 {signedMoney(full.enhanced_analysis.optimized.final_assets-r.optimized.final_assets)}</p></div>
+    </div>
+    <div className="mt-5 grid gap-3 sm:grid-cols-3"><div className="rounded-2xl bg-white/10 p-4"><span className="text-xs text-emerald-200">현재 월 저축여력</span><b className="mt-1 block text-xl">{manWon(r.profile.monthly_saving_capacity)}</b></div><div className="rounded-2xl bg-white/10 p-4"><span className="text-xs text-emerald-200">소비·카드 추가여력</span><b className="mt-1 block text-xl">+{manWon(full.total_extra_monthly_saving)}</b><p className="mt-1 text-xs text-emerald-200">소비조정 +{manWon(full.cut_scenario_monthly_saving)} · 카드 +{manWon(full.best_card_incremental_monthly_benefit)}</p></div><div className="rounded-2xl bg-white/10 p-4"><span className="text-xs text-emerald-200">Full FinPath 월 저축여력</span><b className="mt-1 block text-xl">{manWon(full.enhanced_monthly_saving_capacity)}</b></div></div>
+    <div className="mt-5 rounded-2xl bg-black/20 p-4 text-sm text-emerald-50"><b>최종 상태</b> · {full.enhanced_analysis.goal.status==="ACHIEVED"?`목표 달성 · 목표자산 ${manWon(full.enhanced_analysis.goal.target_assets)}`:`목표까지 ${manWon(full.enhanced_analysis.goal.shortfall)} 부족`} · 소비 절감은 사용자가 선택한 시나리오이며 카드 혜택은 추가 소비 없이 현재 소비에서 받을 수 있는 순혜택만 반영합니다.</div>
+  </section> : <section className="mt-10 overflow-hidden rounded-3xl border border-emerald-200 bg-emerald-50 p-7">
+    <p className="text-sm font-bold text-emerald-700">기본 FinPath 분석 완료 · 선택 부가서비스</p><h2 className="mt-1 text-2xl font-black">여기까지가 기본 금융경로입니다. 더 줄일 수 있는 소비가 있다면 마지막으로 한 번 더 당길 수 있어요.</h2><p className="mt-3 max-w-3xl text-sm leading-6 text-emerald-900">이 단계는 선택사항입니다. 거래내역 CSV/XLSX 또는 월 소비를 입력하면 소비 조정 시나리오와 체크·신용카드 순혜택을 계산하고, 늘어난 월 저축여력으로 기존 FinPath 경로를 다시 계산합니다.</p><div className="mt-5 flex flex-wrap items-center gap-3"><Link href="/spending" className="rounded-xl bg-emerald-950 px-5 py-3 font-black text-white">선택: 소비·카드까지 최적화</Link><span className="text-xs text-emerald-800">완료 후 일반저축 vs 기본 FinPath vs Full FinPath를 한 번에 비교합니다.</span></div>
+  </section>}
 
   <details className="mt-8 rounded-2xl border border-slate-200 bg-slate-100 p-5 text-sm text-slate-600"><summary className="cursor-pointer font-bold text-slate-800">계산 기준과 가정 보기</summary><div className="mt-3 space-y-1"><p>일반저축 기준금리 연 {(r.assumptions.baseline_annual_rate*100).toFixed(2)}% · {r.assumptions.baseline_rate_source} · 확인일 {r.assumptions.baseline_rate_checked_at}</p><p>일반저축 이자소득세 기준: 15.4% · 정책별 비과세/감면 조건은 정책 데이터에 따라 반영</p><p>모든 선택 정책은 시뮬레이션 시작 시점에 가입하는 것으로 가정하며, 만기 후 신규 정책 재가입은 계산하지 않습니다.</p></div></details>
  </Shell>;
