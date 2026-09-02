@@ -26,3 +26,26 @@
 - `PolicyAnalysis` is the analyze-view model that joins pure eligibility with standalone benefit, selection and allocation metadata.
 - Test policies under `test_policies.json` are synthetic and must never be presented as real policy products.
 - `FINPATH_POLICY_DATASET=production` loads only `production_policies.json` and never falls back to `TEST_*` data.
+
+## Spending / Card Optimization (MVP extension)
+
+### GET `/api/cards`
+Returns the current verified representative card catalog used by the MVP card-benefit simulator.
+
+### POST `/api/spending/recommend`
+Request:
+```json
+{
+  "profile": { "...": "UserProfile" },
+  "spending": {
+    "categories": { "DELIVERY": 150000, "CAFE": 80000 },
+    "current_card_id": null,
+    "card_type_preference": "BOTH",
+    "cut_percent": 10
+  }
+}
+```
+Response includes the discretionary-spend adjustment scenario, TOP 3 cards that meet their spending threshold **without increasing current spending**, net monthly card benefit after annual-fee allocation, and a full FinPath re-analysis with the extra monthly savings redirected to `monthly_saving_capacity`.
+
+### POST `/api/spending/upload`
+Multipart form field `file`; CSV/XLSX/XLSM up to 5 MB. Returns categorized transactions and monthly category averages. Uploaded bytes are processed in-memory and are not persisted by the API.

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from app.core.settings import get_baseline_config
 from app.data.policies import load_policies
@@ -20,12 +20,14 @@ from app.models.contracts import (
 from app.models.enums import CompanySize, EmploymentType
 from app.models.profile import UserProfile
 from app.models.results import AnalyzeResponse
+from app.models.spending import SpendingOptimizationResponse, SpendingRecommendationRequest, SpendingUploadResponse
 from app.services.analyze import analyze_profile
 from app.services.eligibility import evaluate_policies
 from app.services.finance import simulate_allocations
 from app.services.goal import goal_seeking
 from app.services.optimizer import optimize
 from app.services.scenario import parse_scenario
+from app.services.spending import load_card_catalog, optimize_spending, parse_spending_file
 
 router = APIRouter(prefix="/api")
 
@@ -48,6 +50,30 @@ def _policies():
 @router.get("/policies")
 def policies() -> list[dict[str, Any]]:
     return [p.model_dump(mode="json") for p in _policies()]
+
+
+
+
+@router.get("/cards")
+def cards() -> list[dict[str, Any]]:
+    """Verified representative card catalog used by the spending MVP."""
+    return load_card_catalog()
+
+
+@router.post("/spending/recommend", response_model=SpendingOptimizationResponse)
+def spending_recommend(request: SpendingRecommendationRequest) -> SpendingOptimizationResponse:
+    return optimize_spending(request.profile, request.spending)
+
+
+@router.post("/spending/upload", response_model=SpendingUploadResponse)
+async def spending_upload(file: UploadFile = File(...)) -> SpendingUploadResponse:
+    content = await file.read()
+    if len(content) > 5 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="거래내역 파일은 5MB 이하만 업로드할 수 있습니다.")
+    try:
+        return parse_spending_file(file.filename or "transactions.csv", content)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @router.post("/eligibility", response_model=EligibilityResponse)

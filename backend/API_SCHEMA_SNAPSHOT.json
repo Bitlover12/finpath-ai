@@ -1,1735 +1,669 @@
 {
-  "UserProfile": {
-    "$defs": {
-      "CompanySize": {
-        "enum": [
-          "SME",
-          "MID",
-          "LARGE",
-          "PUBLIC",
-          "NONE",
-          "OTHER"
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FinPath API",
+    "description": "Deterministic financial-path engine with optional AI scenario parsing.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
         ],
-        "title": "CompanySize",
-        "type": "string"
-      },
-      "EmploymentType": {
-        "enum": [
-          "EMPLOYEE",
-          "SELF_EMPLOYED",
-          "FREELANCER",
-          "UNEMPLOYED",
-          "OTHER"
-        ],
-        "title": "EmploymentType",
-        "type": "string"
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
       }
     },
-    "additionalProperties": false,
-    "properties": {
-      "age": {
-        "maximum": 120,
-        "minimum": 0,
-        "title": "Age",
-        "type": "integer"
-      },
-      "region": {
-        "minLength": 1,
-        "title": "Region",
-        "type": "string"
-      },
-      "employment_type": {
-        "$ref": "#/$defs/EmploymentType"
-      },
-      "company_size": {
-        "$ref": "#/$defs/CompanySize"
-      },
-      "annual_income": {
-        "minimum": 0,
-        "title": "Annual Income",
-        "type": "integer"
-      },
-      "employment_months": {
-        "minimum": 0,
-        "title": "Employment Months",
-        "type": "integer"
-      },
-      "current_assets": {
-        "minimum": 0,
-        "title": "Current Assets",
-        "type": "integer"
-      },
-      "monthly_saving_capacity": {
-        "minimum": 0,
-        "title": "Monthly Saving Capacity",
-        "type": "integer"
-      },
-      "housing_status": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
+    "/api/policies": {
+      "get": {
+        "summary": "Policies",
+        "operationId": "policies_api_policies_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Policies Api Policies Get"
+                }
+              }
+            }
           }
-        ],
-        "default": null,
-        "title": "Housing Status"
-      },
-      "household_income": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
+        }
+      }
+    },
+    "/api/cards": {
+      "get": {
+        "summary": "Cards",
+        "description": "Verified representative card catalog used by the spending MVP.",
+        "operationId": "cards_api_cards_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Cards Api Cards Get"
+                }
+              }
+            }
           }
-        ],
-        "default": null,
-        "title": "Household Income"
-      },
-      "marital_status": {
-        "anyOf": [
-          {
-            "type": "string"
+        }
+      }
+    },
+    "/api/spending/recommend": {
+      "post": {
+        "summary": "Spending Recommend",
+        "operationId": "spending_recommend_api_spending_recommend_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpendingRecommendationRequest"
+              }
+            }
           },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Marital Status"
-      },
-      "target_assets": {
-        "exclusiveMinimum": 0,
-        "title": "Target Assets",
-        "type": "integer"
-      },
-      "target_years": {
-        "exclusiveMinimum": 0,
-        "maximum": 50,
-        "title": "Target Years",
-        "type": "integer"
-      },
-      "manual_confirmations": {
-        "additionalProperties": {
-          "type": "boolean"
+          "required": true
         },
-        "title": "Manual Confirmations",
-        "type": "object"
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendingOptimizationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
-    "required": [
-      "age",
-      "region",
-      "employment_type",
-      "company_size",
-      "annual_income",
-      "employment_months",
-      "current_assets",
-      "monthly_saving_capacity",
-      "target_assets",
-      "target_years"
-    ],
-    "title": "UserProfile",
-    "type": "object"
+    "/api/spending/upload": {
+      "post": {
+        "summary": "Spending Upload",
+        "operationId": "spending_upload_api_spending_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_spending_upload_api_spending_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendingUploadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eligibility": {
+      "post": {
+        "summary": "Eligibility",
+        "operationId": "eligibility_api_eligibility_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EligibilityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EligibilityResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/simulate": {
+      "post": {
+        "summary": "Simulate",
+        "operationId": "simulate_api_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analyze": {
+      "post": {
+        "summary": "Analyze",
+        "operationId": "analyze_api_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/optimize": {
+      "post": {
+        "summary": "Optimize Api",
+        "operationId": "optimize_api_api_optimize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Optimize Api Api Optimize Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/goal-seek": {
+      "post": {
+        "summary": "Goal Seek",
+        "operationId": "goal_seek_api_goal_seek_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoalSeekRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Goal Seek Api Goal Seek Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scenario/parse": {
+      "post": {
+        "summary": "Scenario Parse",
+        "operationId": "scenario_parse_api_scenario_parse_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioParseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioParseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scenario/apply": {
+      "post": {
+        "summary": "Scenario Apply",
+        "operationId": "scenario_apply_api_scenario_apply_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioApplyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/demo/{demo_id}": {
+      "get": {
+        "summary": "Demo",
+        "operationId": "demo_api_demo__demo_id__get",
+        "parameters": [
+          {
+            "name": "demo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Demo Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
-  "IncomeCondition": {
-    "$defs": {
-      "IncomeBasis": {
-        "enum": [
-          "PERSONAL",
-          "HOUSEHOLD"
-        ],
-        "title": "IncomeBasis",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "basis": {
-        "$ref": "#/$defs/IncomeBasis"
-      },
-      "min_income": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
+  "components": {
+    "schemas": {
+      "AnalyzeRequest": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
           }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile"
         ],
-        "default": null,
-        "title": "Min Income"
+        "title": "AnalyzeRequest"
       },
-      "max_income": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
+      "AnalyzeResponse": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
           },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Max Income"
-      }
-    },
-    "required": [
-      "basis"
-    ],
-    "title": "IncomeCondition",
-    "type": "object"
-  },
-  "GovernmentContributionTier": {
-    "$defs": {
-      "IncomeBasis": {
-        "enum": [
-          "PERSONAL",
-          "HOUSEHOLD"
-        ],
-        "title": "IncomeBasis",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "income_basis": {
-        "$ref": "#/$defs/IncomeBasis"
-      },
-      "max_income": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
+          "policy_analysis": {
+            "items": {
+              "$ref": "#/components/schemas/PolicyAnalysis"
+            },
+            "type": "array",
+            "title": "Policy Analysis"
           },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Max Income"
-      },
-      "rate": {
-        "maximum": 1,
-        "minimum": 0,
-        "title": "Rate",
-        "type": "number"
-      },
-      "monthly_contribution_cap": {
-        "exclusiveMinimum": 0,
-        "title": "Monthly Contribution Cap",
-        "type": "integer"
-      },
-      "monthly_government_cap": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
+          "excluded_policies": {
+            "items": {
+              "$ref": "#/components/schemas/OptimizationExclusion"
+            },
+            "type": "array",
+            "title": "Excluded Policies"
           },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Monthly Government Cap"
-      }
-    },
-    "required": [
-      "income_basis",
-      "rate",
-      "monthly_contribution_cap"
-    ],
-    "title": "GovernmentContributionTier",
-    "type": "object"
-  },
-  "ManualRequirement": {
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "minLength": 1,
-        "title": "Id",
-        "type": "string"
-      },
-      "label": {
-        "minLength": 1,
-        "title": "Label",
-        "type": "string"
-      },
-      "description": {
-        "minLength": 1,
-        "title": "Description",
-        "type": "string"
-      },
-      "source_url": {
-        "anyOf": [
-          {
-            "format": "uri",
-            "maxLength": 2083,
-            "minLength": 1,
-            "type": "string"
+          "baseline": {
+            "$ref": "#/components/schemas/SimulationResult"
           },
-          {
-            "type": "null"
+          "optimized": {
+            "$ref": "#/components/schemas/SimulationResult"
+          },
+          "policy_effect": {
+            "$ref": "#/components/schemas/PolicyEffect"
+          },
+          "goal": {
+            "$ref": "#/components/schemas/GoalResult"
+          },
+          "goal_seeking": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GoalSeekingResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "roadmap": {
+            "items": {
+              "$ref": "#/components/schemas/RoadmapItem"
+            },
+            "type": "array",
+            "title": "Roadmap"
+          },
+          "assumptions": {
+            "$ref": "#/components/schemas/Assumptions"
           }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile",
+          "policy_analysis",
+          "baseline",
+          "optimized",
+          "policy_effect",
+          "goal",
+          "roadmap",
+          "assumptions"
         ],
-        "default": null,
-        "title": "Source Url"
-      }
-    },
-    "required": [
-      "id",
-      "label",
-      "description"
-    ],
-    "title": "ManualRequirement",
-    "type": "object"
-  },
-  "Policy": {
-    "$defs": {
+        "title": "AnalyzeResponse"
+      },
       "ApplicationStatus": {
+        "type": "string",
         "enum": [
           "OPEN",
           "UPCOMING",
           "CLOSED",
           "CHECK_REQUIRED"
         ],
-        "title": "ApplicationStatus",
-        "type": "string"
+        "title": "ApplicationStatus"
       },
-      "CompanySize": {
-        "enum": [
-          "SME",
-          "MID",
-          "LARGE",
-          "PUBLIC",
-          "NONE",
-          "OTHER"
-        ],
-        "title": "CompanySize",
-        "type": "string"
-      },
-      "EmploymentType": {
-        "enum": [
-          "EMPLOYEE",
-          "SELF_EMPLOYED",
-          "FREELANCER",
-          "UNEMPLOYED",
-          "OTHER"
-        ],
-        "title": "EmploymentType",
-        "type": "string"
-      },
-      "GovernmentContributionTier": {
-        "additionalProperties": false,
-        "properties": {
-          "income_basis": {
-            "$ref": "#/$defs/IncomeBasis"
-          },
-          "max_income": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Max Income"
-          },
-          "rate": {
-            "maximum": 1,
-            "minimum": 0,
-            "title": "Rate",
-            "type": "number"
-          },
-          "monthly_contribution_cap": {
-            "exclusiveMinimum": 0,
-            "title": "Monthly Contribution Cap",
-            "type": "integer"
-          },
-          "monthly_government_cap": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Monthly Government Cap"
-          }
-        },
-        "required": [
-          "income_basis",
-          "rate",
-          "monthly_contribution_cap"
-        ],
-        "title": "GovernmentContributionTier",
-        "type": "object"
-      },
-      "GovernmentSupportTiming": {
-        "enum": [
-          "MONTHLY_ACCRUAL",
-          "AT_MATURITY"
-        ],
-        "title": "GovernmentSupportTiming",
-        "type": "string"
-      },
-      "IncomeBasis": {
-        "enum": [
-          "PERSONAL",
-          "HOUSEHOLD"
-        ],
-        "title": "IncomeBasis",
-        "type": "string"
-      },
-      "IncomeCondition": {
-        "additionalProperties": false,
-        "properties": {
-          "basis": {
-            "$ref": "#/$defs/IncomeBasis"
-          },
-          "min_income": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Min Income"
-          },
-          "max_income": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Max Income"
-          }
-        },
-        "required": [
-          "basis"
-        ],
-        "title": "IncomeCondition",
-        "type": "object"
-      },
-      "ManualRequirement": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "minLength": 1,
-            "title": "Id",
-            "type": "string"
-          },
-          "label": {
-            "minLength": 1,
-            "title": "Label",
-            "type": "string"
-          },
-          "description": {
-            "minLength": 1,
-            "title": "Description",
-            "type": "string"
-          },
-          "source_url": {
-            "anyOf": [
-              {
-                "format": "uri",
-                "maxLength": 2083,
-                "minLength": 1,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Source Url"
-          }
-        },
-        "required": [
-          "id",
-          "label",
-          "description"
-        ],
-        "title": "ManualRequirement",
-        "type": "object"
-      },
-      "TaxTreatment": {
-        "enum": [
-          "TAXABLE",
-          "TAX_FREE",
-          "REDUCED"
-        ],
-        "title": "TaxTreatment",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "id": {
-        "minLength": 1,
-        "title": "Id",
-        "type": "string"
-      },
-      "name": {
-        "minLength": 1,
-        "title": "Name",
-        "type": "string"
-      },
-      "description": {
-        "minLength": 1,
-        "title": "Description",
-        "type": "string"
-      },
-      "min_age": {
-        "anyOf": [
-          {
-            "maximum": 120,
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Min Age"
-      },
-      "max_age": {
-        "anyOf": [
-          {
-            "maximum": 120,
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Max Age"
-      },
-      "income_conditions": {
-        "items": {
-          "$ref": "#/$defs/IncomeCondition"
-        },
-        "title": "Income Conditions",
-        "type": "array"
-      },
-      "manual_requirements": {
-        "items": {
-          "$ref": "#/$defs/ManualRequirement"
-        },
-        "title": "Manual Requirements",
-        "type": "array"
-      },
-      "allowed_regions": {
-        "anyOf": [
-          {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Allowed Regions"
-      },
-      "allowed_company_sizes": {
-        "anyOf": [
-          {
-            "items": {
-              "$ref": "#/$defs/CompanySize"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Allowed Company Sizes"
-      },
-      "allowed_employment_types": {
-        "anyOf": [
-          {
-            "items": {
-              "$ref": "#/$defs/EmploymentType"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Allowed Employment Types"
-      },
-      "min_employment_months": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Min Employment Months"
-      },
-      "max_employment_months": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Max Employment Months"
-      },
-      "monthly_contribution_min": {
-        "anyOf": [
-          {
-            "exclusiveMinimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Monthly Contribution Min"
-      },
-      "monthly_contribution_limit": {
-        "exclusiveMinimum": 0,
-        "title": "Monthly Contribution Limit",
-        "type": "integer"
-      },
-      "government_contribution_tiers": {
-        "anyOf": [
-          {
-            "items": {
-              "$ref": "#/$defs/GovernmentContributionTier"
-            },
-            "type": "array"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Government Contribution Tiers"
-      },
-      "government_support_timing": {
-        "$ref": "#/$defs/GovernmentSupportTiming"
-      },
-      "government_support_interest_bearing": {
-        "title": "Government Support Interest Bearing",
-        "type": "boolean"
-      },
-      "interest_rate": {
-        "maximum": 1,
-        "minimum": 0,
-        "title": "Interest Rate",
-        "type": "number"
-      },
-      "tax_treatment": {
-        "$ref": "#/$defs/TaxTreatment"
-      },
-      "tax_rate_override": {
-        "anyOf": [
-          {
-            "maximum": 1,
-            "minimum": 0,
-            "type": "number"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Tax Rate Override"
-      },
-      "duration_months": {
-        "exclusiveMinimum": 0,
-        "title": "Duration Months",
-        "type": "integer"
-      },
-      "start_date": {
-        "anyOf": [
-          {
-            "format": "date",
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Start Date"
-      },
-      "end_date": {
-        "anyOf": [
-          {
-            "format": "date",
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "End Date"
-      },
-      "incompatible_policy_ids": {
-        "items": {
-          "type": "string"
-        },
-        "title": "Incompatible Policy Ids",
-        "type": "array"
-      },
-      "source_url": {
-        "format": "uri",
-        "maxLength": 2083,
-        "minLength": 1,
-        "title": "Source Url",
-        "type": "string"
-      },
-      "effective_date": {
-        "format": "date",
-        "title": "Effective Date",
-        "type": "string"
-      },
-      "checked_at": {
-        "format": "date-time",
-        "title": "Checked At",
-        "type": "string"
-      },
-      "updated_at": {
-        "format": "date-time",
-        "title": "Updated At",
-        "type": "string"
-      },
-      "application_status": {
-        "$ref": "#/$defs/ApplicationStatus",
-        "default": "CHECK_REQUIRED"
-      },
-      "application_period_text": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Application Period Text"
-      }
-    },
-    "required": [
-      "id",
-      "name",
-      "description",
-      "monthly_contribution_limit",
-      "government_support_timing",
-      "government_support_interest_bearing",
-      "interest_rate",
-      "tax_treatment",
-      "duration_months",
-      "source_url",
-      "effective_date",
-      "checked_at",
-      "updated_at"
-    ],
-    "title": "Policy",
-    "type": "object"
-  },
-  "EligibilityResult": {
-    "$defs": {
-      "EligibilityCheck": {
-        "additionalProperties": false,
-        "properties": {
-          "field": {
-            "title": "Field",
-            "type": "string"
-          },
-          "basis": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/IncomeBasis"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null
-          },
-          "required": {
-            "additionalProperties": true,
-            "title": "Required",
-            "type": "object"
-          },
-          "actual": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Actual"
-          },
-          "result": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Result"
-          },
-          "reason": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Reason"
-          }
-        },
-        "required": [
-          "field"
-        ],
-        "title": "EligibilityCheck",
-        "type": "object"
-      },
-      "EligibilityStatus": {
-        "enum": [
-          "ELIGIBLE",
-          "INELIGIBLE",
-          "NEEDS_MORE_INFORMATION"
-        ],
-        "title": "EligibilityStatus",
-        "type": "string"
-      },
-      "IncomeBasis": {
-        "enum": [
-          "PERSONAL",
-          "HOUSEHOLD"
-        ],
-        "title": "IncomeBasis",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "policy_id": {
-        "title": "Policy Id",
-        "type": "string"
-      },
-      "status": {
-        "$ref": "#/$defs/EligibilityStatus"
-      },
-      "checks": {
-        "items": {
-          "$ref": "#/$defs/EligibilityCheck"
-        },
-        "title": "Checks",
-        "type": "array"
-      },
-      "missing_fields": {
-        "items": {
-          "type": "string"
-        },
-        "title": "Missing Fields",
-        "type": "array"
-      }
-    },
-    "required": [
-      "policy_id",
-      "status"
-    ],
-    "title": "EligibilityResult",
-    "type": "object"
-  },
-  "PolicyAnalysis": {
-    "$defs": {
-      "ApplicationStatus": {
-        "enum": [
-          "OPEN",
-          "UPCOMING",
-          "CLOSED",
-          "CHECK_REQUIRED"
-        ],
-        "title": "ApplicationStatus",
-        "type": "string"
-      },
-      "EligibilityCheck": {
-        "additionalProperties": false,
-        "properties": {
-          "field": {
-            "title": "Field",
-            "type": "string"
-          },
-          "basis": {
-            "anyOf": [
-              {
-                "$ref": "#/$defs/IncomeBasis"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null
-          },
-          "required": {
-            "additionalProperties": true,
-            "title": "Required",
-            "type": "object"
-          },
-          "actual": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Actual"
-          },
-          "result": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Result"
-          },
-          "reason": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Reason"
-          }
-        },
-        "required": [
-          "field"
-        ],
-        "title": "EligibilityCheck",
-        "type": "object"
-      },
-      "EligibilityStatus": {
-        "enum": [
-          "ELIGIBLE",
-          "INELIGIBLE",
-          "NEEDS_MORE_INFORMATION"
-        ],
-        "title": "EligibilityStatus",
-        "type": "string"
-      },
-      "IncomeBasis": {
-        "enum": [
-          "PERSONAL",
-          "HOUSEHOLD"
-        ],
-        "title": "IncomeBasis",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "policy_id": {
-        "title": "Policy Id",
-        "type": "string"
-      },
-      "policy_name": {
-        "title": "Policy Name",
-        "type": "string"
-      },
-      "source_url": {
-        "format": "uri",
-        "maxLength": 2083,
-        "minLength": 1,
-        "title": "Source Url",
-        "type": "string"
-      },
-      "application_status": {
-        "$ref": "#/$defs/ApplicationStatus"
-      },
-      "application_period_text": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Application Period Text"
-      },
-      "status": {
-        "$ref": "#/$defs/EligibilityStatus"
-      },
-      "checks": {
-        "items": {
-          "$ref": "#/$defs/EligibilityCheck"
-        },
-        "title": "Checks",
-        "type": "array"
-      },
-      "missing_fields": {
-        "items": {
-          "type": "string"
-        },
-        "title": "Missing Fields",
-        "type": "array"
-      },
-      "standalone_contribution": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Standalone Contribution"
-      },
-      "incremental_benefit": {
-        "anyOf": [
-          {
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Incremental Benefit"
-      },
-      "benefit_score": {
-        "anyOf": [
-          {
-            "type": "number"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Benefit Score"
-      },
-      "selected_in_optimal_path": {
-        "default": false,
-        "title": "Selected In Optimal Path",
-        "type": "boolean"
-      },
-      "allocated_monthly_amount": {
-        "default": 0,
-        "minimum": 0,
-        "title": "Allocated Monthly Amount",
-        "type": "integer"
-      },
-      "optimization_exclusion_reason": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Optimization Exclusion Reason"
-      }
-    },
-    "required": [
-      "policy_id",
-      "policy_name",
-      "source_url",
-      "application_status",
-      "status"
-    ],
-    "title": "PolicyAnalysis",
-    "type": "object"
-  },
-  "SimulationResult": {
-    "$defs": {
       "AssetPoint": {
-        "additionalProperties": false,
         "properties": {
           "month": {
-            "minimum": 0,
-            "title": "Month",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Month"
           },
           "total_assets": {
-            "minimum": 0,
-            "title": "Total Assets",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total Assets"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "month",
           "total_assets"
         ],
-        "title": "AssetPoint",
-        "type": "object"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "initial_assets": {
-        "minimum": 0,
-        "title": "Initial Assets",
-        "type": "integer"
-      },
-      "principal": {
-        "minimum": 0,
-        "title": "Principal",
-        "type": "integer"
-      },
-      "gross_interest": {
-        "minimum": 0,
-        "title": "Gross Interest",
-        "type": "integer"
-      },
-      "tax_paid": {
-        "minimum": 0,
-        "title": "Tax Paid",
-        "type": "integer"
-      },
-      "net_interest": {
-        "minimum": 0,
-        "title": "Net Interest",
-        "type": "integer"
-      },
-      "government_support": {
-        "minimum": 0,
-        "title": "Government Support",
-        "type": "integer"
-      },
-      "tax_benefit": {
-        "minimum": 0,
-        "title": "Tax Benefit",
-        "type": "integer"
-      },
-      "final_assets": {
-        "minimum": 0,
-        "title": "Final Assets",
-        "type": "integer"
-      },
-      "trajectory": {
-        "items": {
-          "$ref": "#/$defs/AssetPoint"
-        },
-        "title": "Trajectory",
-        "type": "array"
-      }
-    },
-    "required": [
-      "initial_assets",
-      "principal",
-      "gross_interest",
-      "tax_paid",
-      "net_interest",
-      "government_support",
-      "tax_benefit",
-      "final_assets"
-    ],
-    "title": "SimulationResult",
-    "type": "object"
-  },
-  "GoalResult": {
-    "$defs": {
-      "GoalStatus": {
-        "enum": [
-          "ACHIEVED",
-          "SHORTFALL"
-        ],
-        "title": "GoalStatus",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "target_assets": {
-        "exclusiveMinimum": 0,
-        "title": "Target Assets",
-        "type": "integer"
-      },
-      "final_assets": {
-        "minimum": 0,
-        "title": "Final Assets",
-        "type": "integer"
-      },
-      "status": {
-        "$ref": "#/$defs/GoalStatus"
-      },
-      "shortfall": {
-        "minimum": 0,
-        "title": "Shortfall",
-        "type": "integer"
-      }
-    },
-    "required": [
-      "target_assets",
-      "final_assets",
-      "status",
-      "shortfall"
-    ],
-    "title": "GoalResult",
-    "type": "object"
-  },
-  "GoalSeekingResult": {
-    "additionalProperties": false,
-    "properties": {
-      "required_monthly_saving": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Required Monthly Saving"
-      },
-      "required_duration_months": {
-        "anyOf": [
-          {
-            "exclusiveMinimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Required Duration Months"
-      },
-      "required_initial_assets": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Required Initial Assets"
-      }
-    },
-    "title": "GoalSeekingResult",
-    "type": "object"
-  },
-  "RoadmapItem": {
-    "$defs": {
-      "RoadmapType": {
-        "enum": [
-          "POLICY_SAVING",
-          "GENERAL_SAVING",
-          "MATURITY_REINVESTMENT"
-        ],
-        "title": "RoadmapType",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "type": {
-        "$ref": "#/$defs/RoadmapType"
-      },
-      "start_month": {
-        "title": "Start Month",
-        "type": "string"
-      },
-      "end_month": {
-        "title": "End Month",
-        "type": "string"
-      },
-      "product_id": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Product Id"
-      },
-      "source_policy_id": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Source Policy Id"
-      },
-      "product_name": {
-        "title": "Product Name",
-        "type": "string"
-      },
-      "monthly_amount": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Monthly Amount"
-      },
-      "initial_amount": {
-        "anyOf": [
-          {
-            "minimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Initial Amount"
-      }
-    },
-    "required": [
-      "type",
-      "start_month",
-      "end_month",
-      "product_name"
-    ],
-    "title": "RoadmapItem",
-    "type": "object"
-  },
-  "Assumptions": {
-    "additionalProperties": false,
-    "properties": {
-      "calculation_date": {
-        "format": "date",
-        "title": "Calculation Date",
-        "type": "string"
-      },
-      "baseline_annual_rate": {
-        "maximum": 1,
-        "minimum": 0,
-        "title": "Baseline Annual Rate",
-        "type": "number"
-      },
-      "baseline_rate_source": {
-        "title": "Baseline Rate Source",
-        "type": "string"
-      },
-      "baseline_rate_source_url": {
-        "anyOf": [
-          {
-            "format": "uri",
-            "maxLength": 2083,
-            "minLength": 1,
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Baseline Rate Source Url"
-      },
-      "baseline_rate_checked_at": {
-        "format": "date",
-        "title": "Baseline Rate Checked At",
-        "type": "string"
-      },
-      "tax_basis": {
-        "default": "GENERAL_RESIDENT_15_4",
-        "title": "Tax Basis",
-        "type": "string"
-      },
-      "tax_timing": {
-        "default": "AT_MATURITY",
-        "title": "Tax Timing",
-        "type": "string"
-      },
-      "contribution_timing": {
-        "default": "END_OF_MONTH",
-        "title": "Contribution Timing",
-        "type": "string"
-      },
-      "interest_method": {
-        "title": "Interest Method",
-        "type": "string"
-      },
-      "policy_start_timing": {
-        "default": "ALL_AT_MONTH_0",
-        "title": "Policy Start Timing",
-        "type": "string"
-      },
-      "early_termination_assumed": {
-        "default": false,
-        "title": "Early Termination Assumed",
-        "type": "boolean"
-      },
-      "policy_conditions_maintained": {
-        "default": true,
-        "title": "Policy Conditions Maintained",
-        "type": "boolean"
-      },
-      "reinvestment_rate_basis": {
-        "default": "BASELINE_CONFIG",
-        "title": "Reinvestment Rate Basis",
-        "type": "string"
-      },
-      "reinvestment_tax_treatment": {
-        "default": "TAXABLE",
-        "title": "Reinvestment Tax Treatment",
-        "type": "string"
-      },
-      "reinvestment_tax_timing": {
-        "default": "AT_HORIZON_END",
-        "title": "Reinvestment Tax Timing",
-        "type": "string"
-      }
-    },
-    "required": [
-      "calculation_date",
-      "baseline_annual_rate",
-      "baseline_rate_source",
-      "baseline_rate_checked_at",
-      "interest_method"
-    ],
-    "title": "Assumptions",
-    "type": "object"
-  },
-  "AnalyzeRequest": {
-    "$defs": {
-      "CompanySize": {
-        "enum": [
-          "SME",
-          "MID",
-          "LARGE",
-          "PUBLIC",
-          "NONE",
-          "OTHER"
-        ],
-        "title": "CompanySize",
-        "type": "string"
-      },
-      "EmploymentType": {
-        "enum": [
-          "EMPLOYEE",
-          "SELF_EMPLOYED",
-          "FREELANCER",
-          "UNEMPLOYED",
-          "OTHER"
-        ],
-        "title": "EmploymentType",
-        "type": "string"
-      },
-      "UserProfile": {
-        "additionalProperties": false,
-        "properties": {
-          "age": {
-            "maximum": 120,
-            "minimum": 0,
-            "title": "Age",
-            "type": "integer"
-          },
-          "region": {
-            "minLength": 1,
-            "title": "Region",
-            "type": "string"
-          },
-          "employment_type": {
-            "$ref": "#/$defs/EmploymentType"
-          },
-          "company_size": {
-            "$ref": "#/$defs/CompanySize"
-          },
-          "annual_income": {
-            "minimum": 0,
-            "title": "Annual Income",
-            "type": "integer"
-          },
-          "employment_months": {
-            "minimum": 0,
-            "title": "Employment Months",
-            "type": "integer"
-          },
-          "current_assets": {
-            "minimum": 0,
-            "title": "Current Assets",
-            "type": "integer"
-          },
-          "monthly_saving_capacity": {
-            "minimum": 0,
-            "title": "Monthly Saving Capacity",
-            "type": "integer"
-          },
-          "housing_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Housing Status"
-          },
-          "household_income": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Household Income"
-          },
-          "marital_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Marital Status"
-          },
-          "target_assets": {
-            "exclusiveMinimum": 0,
-            "title": "Target Assets",
-            "type": "integer"
-          },
-          "target_years": {
-            "exclusiveMinimum": 0,
-            "maximum": 50,
-            "title": "Target Years",
-            "type": "integer"
-          },
-          "manual_confirmations": {
-            "additionalProperties": {
-              "type": "boolean"
-            },
-            "title": "Manual Confirmations",
-            "type": "object"
-          }
-        },
-        "required": [
-          "age",
-          "region",
-          "employment_type",
-          "company_size",
-          "annual_income",
-          "employment_months",
-          "current_assets",
-          "monthly_saving_capacity",
-          "target_assets",
-          "target_years"
-        ],
-        "title": "UserProfile",
-        "type": "object"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "profile": {
-        "$ref": "#/$defs/UserProfile"
-      }
-    },
-    "required": [
-      "profile"
-    ],
-    "title": "AnalyzeRequest",
-    "type": "object"
-  },
-  "AnalyzeResponse": {
-    "$defs": {
-      "ApplicationStatus": {
-        "enum": [
-          "OPEN",
-          "UPCOMING",
-          "CLOSED",
-          "CHECK_REQUIRED"
-        ],
-        "title": "ApplicationStatus",
-        "type": "string"
-      },
-      "AssetPoint": {
-        "additionalProperties": false,
-        "properties": {
-          "month": {
-            "minimum": 0,
-            "title": "Month",
-            "type": "integer"
-          },
-          "total_assets": {
-            "minimum": 0,
-            "title": "Total Assets",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "month",
-          "total_assets"
-        ],
-        "title": "AssetPoint",
-        "type": "object"
+        "title": "AssetPoint"
       },
       "Assumptions": {
-        "additionalProperties": false,
         "properties": {
           "calculation_date": {
+            "type": "string",
             "format": "date",
-            "title": "Calculation Date",
-            "type": "string"
+            "title": "Calculation Date"
           },
           "baseline_annual_rate": {
-            "maximum": 1,
-            "minimum": 0,
-            "title": "Baseline Annual Rate",
-            "type": "number"
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Baseline Annual Rate"
           },
           "baseline_rate_source": {
-            "title": "Baseline Rate Source",
-            "type": "string"
+            "type": "string",
+            "title": "Baseline Rate Source"
           },
           "baseline_rate_source_url": {
             "anyOf": [
               {
-                "format": "uri",
+                "type": "string",
                 "maxLength": 2083,
                 "minLength": 1,
-                "type": "string"
+                "format": "uri"
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Baseline Rate Source Url"
           },
           "baseline_rate_checked_at": {
+            "type": "string",
             "format": "date",
-            "title": "Baseline Rate Checked At",
-            "type": "string"
+            "title": "Baseline Rate Checked At"
           },
           "tax_basis": {
-            "default": "GENERAL_RESIDENT_15_4",
+            "type": "string",
             "title": "Tax Basis",
-            "type": "string"
+            "default": "GENERAL_RESIDENT_15_4"
           },
           "tax_timing": {
-            "default": "AT_MATURITY",
+            "type": "string",
             "title": "Tax Timing",
-            "type": "string"
+            "default": "AT_MATURITY"
           },
           "contribution_timing": {
-            "default": "END_OF_MONTH",
+            "type": "string",
             "title": "Contribution Timing",
-            "type": "string"
+            "default": "END_OF_MONTH"
           },
           "interest_method": {
-            "title": "Interest Method",
-            "type": "string"
+            "type": "string",
+            "title": "Interest Method"
           },
           "policy_start_timing": {
-            "default": "ALL_AT_MONTH_0",
+            "type": "string",
             "title": "Policy Start Timing",
-            "type": "string"
+            "default": "ALL_AT_MONTH_0"
           },
           "early_termination_assumed": {
-            "default": false,
+            "type": "boolean",
             "title": "Early Termination Assumed",
-            "type": "boolean"
+            "default": false
           },
           "policy_conditions_maintained": {
-            "default": true,
+            "type": "boolean",
             "title": "Policy Conditions Maintained",
-            "type": "boolean"
+            "default": true
           },
           "reinvestment_rate_basis": {
-            "default": "BASELINE_CONFIG",
+            "type": "string",
             "title": "Reinvestment Rate Basis",
-            "type": "string"
+            "default": "BASELINE_CONFIG"
           },
           "reinvestment_tax_treatment": {
-            "default": "TAXABLE",
+            "type": "string",
             "title": "Reinvestment Tax Treatment",
-            "type": "string"
+            "default": "TAXABLE"
           },
           "reinvestment_tax_timing": {
-            "default": "AT_HORIZON_END",
+            "type": "string",
             "title": "Reinvestment Tax Timing",
-            "type": "string"
+            "default": "AT_HORIZON_END"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "calculation_date",
           "baseline_annual_rate",
@@ -1737,10 +671,145 @@
           "baseline_rate_checked_at",
           "interest_method"
         ],
-        "title": "Assumptions",
-        "type": "object"
+        "title": "Assumptions"
+      },
+      "Body_spending_upload_api_spending_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_spending_upload_api_spending_upload_post"
+      },
+      "CardBenefitBreakdown": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "amount": {
+            "type": "integer",
+            "title": "Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "amount"
+        ],
+        "title": "CardBenefitBreakdown"
+      },
+      "CardRecommendation": {
+        "properties": {
+          "card_id": {
+            "type": "string",
+            "title": "Card Id"
+          },
+          "issuer": {
+            "type": "string",
+            "title": "Issuer"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "card_type": {
+            "$ref": "#/components/schemas/CardType"
+          },
+          "annual_fee": {
+            "type": "integer",
+            "title": "Annual Fee"
+          },
+          "minimum_monthly_spend": {
+            "type": "integer",
+            "title": "Minimum Monthly Spend"
+          },
+          "eligible_without_extra_spend": {
+            "type": "boolean",
+            "title": "Eligible Without Extra Spend"
+          },
+          "estimated_gross_monthly_benefit": {
+            "type": "integer",
+            "title": "Estimated Gross Monthly Benefit"
+          },
+          "estimated_monthly_fee": {
+            "type": "integer",
+            "title": "Estimated Monthly Fee"
+          },
+          "estimated_net_monthly_benefit": {
+            "type": "integer",
+            "title": "Estimated Net Monthly Benefit"
+          },
+          "incremental_monthly_benefit_vs_current": {
+            "type": "integer",
+            "title": "Incremental Monthly Benefit Vs Current"
+          },
+          "benefit_breakdown": {
+            "items": {
+              "$ref": "#/components/schemas/CardBenefitBreakdown"
+            },
+            "type": "array",
+            "title": "Benefit Breakdown"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "checked_at": {
+            "type": "string",
+            "title": "Checked At"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card_id",
+          "issuer",
+          "name",
+          "card_type",
+          "annual_fee",
+          "minimum_monthly_spend",
+          "eligible_without_extra_spend",
+          "estimated_gross_monthly_benefit",
+          "estimated_monthly_fee",
+          "estimated_net_monthly_benefit",
+          "incremental_monthly_benefit_vs_current",
+          "source_url",
+          "checked_at"
+        ],
+        "title": "CardRecommendation"
+      },
+      "CardType": {
+        "type": "string",
+        "enum": [
+          "CHECK",
+          "CREDIT"
+        ],
+        "title": "CardType"
+      },
+      "CardTypePreference": {
+        "type": "string",
+        "enum": [
+          "BOTH",
+          "CHECK",
+          "CREDIT"
+        ],
+        "title": "CardTypePreference"
       },
       "CompanySize": {
+        "type": "string",
         "enum": [
           "SME",
           "MID",
@@ -1749,31 +818,28 @@
           "NONE",
           "OTHER"
         ],
-        "title": "CompanySize",
-        "type": "string"
+        "title": "CompanySize"
       },
       "EligibilityCheck": {
-        "additionalProperties": false,
         "properties": {
           "field": {
-            "title": "Field",
-            "type": "string"
+            "type": "string",
+            "title": "Field"
           },
           "basis": {
             "anyOf": [
               {
-                "$ref": "#/$defs/IncomeBasis"
+                "$ref": "#/components/schemas/IncomeBasis"
               },
               {
                 "type": "null"
               }
-            ],
-            "default": null
+            ]
           },
           "required": {
             "additionalProperties": true,
-            "title": "Required",
-            "type": "object"
+            "type": "object",
+            "title": "Required"
           },
           "actual": {
             "anyOf": [
@@ -1782,7 +848,6 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Actual"
           },
           "result": {
@@ -1794,7 +859,6 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Result"
           },
           "reason": {
@@ -1806,26 +870,103 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Reason"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "field"
         ],
-        "title": "EligibilityCheck",
-        "type": "object"
+        "title": "EligibilityCheck"
+      },
+      "EligibilityRequest": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "policy_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile"
+        ],
+        "title": "EligibilityRequest"
+      },
+      "EligibilityResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/EligibilityResult"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "title": "EligibilityResponse"
+      },
+      "EligibilityResult": {
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "title": "Policy Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/EligibilityStatus"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/EligibilityCheck"
+            },
+            "type": "array",
+            "title": "Checks"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Fields"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_id",
+          "status"
+        ],
+        "title": "EligibilityResult"
       },
       "EligibilityStatus": {
+        "type": "string",
         "enum": [
           "ELIGIBLE",
           "INELIGIBLE",
           "NEEDS_MORE_INFORMATION"
         ],
-        "title": "EligibilityStatus",
-        "type": "string"
+        "title": "EligibilityStatus"
       },
       "EmploymentType": {
+        "type": "string",
         "enum": [
           "EMPLOYEE",
           "SELF_EMPLOYED",
@@ -1833,141 +974,215 @@
           "UNEMPLOYED",
           "OTHER"
         ],
-        "title": "EmploymentType",
-        "type": "string"
+        "title": "EmploymentType"
       },
       "GoalResult": {
-        "additionalProperties": false,
         "properties": {
           "target_assets": {
-            "exclusiveMinimum": 0,
-            "title": "Target Assets",
-            "type": "integer"
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Target Assets"
           },
           "final_assets": {
-            "minimum": 0,
-            "title": "Final Assets",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Final Assets"
           },
           "status": {
-            "$ref": "#/$defs/GoalStatus"
+            "$ref": "#/components/schemas/GoalStatus"
           },
           "shortfall": {
-            "minimum": 0,
-            "title": "Shortfall",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Shortfall"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "target_assets",
           "final_assets",
           "status",
           "shortfall"
         ],
-        "title": "GoalResult",
-        "type": "object"
+        "title": "GoalResult"
+      },
+      "GoalSeekRequest": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile"
+        ],
+        "title": "GoalSeekRequest"
       },
       "GoalSeekingResult": {
-        "additionalProperties": false,
         "properties": {
           "required_monthly_saving": {
             "anyOf": [
               {
-                "minimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Required Monthly Saving"
           },
           "required_duration_months": {
             "anyOf": [
               {
-                "exclusiveMinimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Required Duration Months"
           },
           "required_initial_assets": {
             "anyOf": [
               {
-                "minimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Required Initial Assets"
           }
         },
-        "title": "GoalSeekingResult",
-        "type": "object"
+        "additionalProperties": false,
+        "type": "object",
+        "title": "GoalSeekingResult"
       },
       "GoalStatus": {
+        "type": "string",
         "enum": [
           "ACHIEVED",
           "SHORTFALL"
         ],
-        "title": "GoalStatus",
-        "type": "string"
+        "title": "GoalStatus"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
       },
       "IncomeBasis": {
+        "type": "string",
         "enum": [
           "PERSONAL",
           "HOUSEHOLD"
         ],
-        "title": "IncomeBasis",
-        "type": "string"
+        "title": "IncomeBasis"
       },
       "OptimizationExclusion": {
-        "additionalProperties": false,
         "properties": {
           "policy_id": {
-            "title": "Policy Id",
-            "type": "string"
+            "type": "string",
+            "title": "Policy Id"
           },
           "reason": {
-            "title": "Reason",
-            "type": "string"
+            "type": "string",
+            "title": "Reason"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "policy_id",
           "reason"
         ],
-        "title": "OptimizationExclusion",
-        "type": "object"
+        "title": "OptimizationExclusion"
       },
-      "PolicyAnalysis": {
-        "additionalProperties": false,
+      "ParsedTransaction": {
+        "properties": {
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "amount": {
+            "type": "integer",
+            "title": "Amount"
+          },
+          "category": {
+            "$ref": "#/components/schemas/SpendingCategory"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "amount",
+          "category"
+        ],
+        "title": "ParsedTransaction"
+      },
+      "PolicyAllocation": {
         "properties": {
           "policy_id": {
-            "title": "Policy Id",
-            "type": "string"
+            "type": "string",
+            "title": "Policy Id"
+          },
+          "monthly_amount": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Monthly Amount"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_id",
+          "monthly_amount"
+        ],
+        "title": "PolicyAllocation"
+      },
+      "PolicyAnalysis": {
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "title": "Policy Id"
           },
           "policy_name": {
-            "title": "Policy Name",
-            "type": "string"
+            "type": "string",
+            "title": "Policy Name"
           },
           "source_url": {
-            "format": "uri",
+            "type": "string",
             "maxLength": 2083,
             "minLength": 1,
-            "title": "Source Url",
-            "type": "string"
+            "format": "uri",
+            "title": "Source Url"
           },
           "application_status": {
-            "$ref": "#/$defs/ApplicationStatus"
+            "$ref": "#/components/schemas/ApplicationStatus"
           },
           "application_period_text": {
             "anyOf": [
@@ -1978,37 +1193,35 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Application Period Text"
           },
           "status": {
-            "$ref": "#/$defs/EligibilityStatus"
+            "$ref": "#/components/schemas/EligibilityStatus"
           },
           "checks": {
             "items": {
-              "$ref": "#/$defs/EligibilityCheck"
+              "$ref": "#/components/schemas/EligibilityCheck"
             },
-            "title": "Checks",
-            "type": "array"
+            "type": "array",
+            "title": "Checks"
           },
           "missing_fields": {
             "items": {
               "type": "string"
             },
-            "title": "Missing Fields",
-            "type": "array"
+            "type": "array",
+            "title": "Missing Fields"
           },
           "standalone_contribution": {
             "anyOf": [
               {
-                "minimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Standalone Contribution"
           },
           "incremental_benefit": {
@@ -2020,7 +1233,6 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Incremental Benefit"
           },
           "benefit_score": {
@@ -2032,19 +1244,18 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Benefit Score"
           },
           "selected_in_optimal_path": {
-            "default": false,
+            "type": "boolean",
             "title": "Selected In Optimal Path",
-            "type": "boolean"
+            "default": false
           },
           "allocated_monthly_amount": {
-            "default": 0,
-            "minimum": 0,
+            "type": "integer",
+            "minimum": 0.0,
             "title": "Allocated Monthly Amount",
-            "type": "integer"
+            "default": 0
           },
           "optimization_exclusion_reason": {
             "anyOf": [
@@ -2055,10 +1266,11 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Optimization Exclusion Reason"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "policy_id",
           "policy_name",
@@ -2066,49 +1278,46 @@
           "application_status",
           "status"
         ],
-        "title": "PolicyAnalysis",
-        "type": "object"
+        "title": "PolicyAnalysis"
       },
       "PolicyEffect": {
-        "additionalProperties": false,
         "properties": {
           "additional_assets": {
-            "title": "Additional Assets",
-            "type": "integer"
+            "type": "integer",
+            "title": "Additional Assets"
           },
           "goal_time_saved_months": {
             "anyOf": [
               {
-                "minimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Goal Time Saved Months"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "additional_assets"
         ],
-        "title": "PolicyEffect",
-        "type": "object"
+        "title": "PolicyEffect"
       },
       "RoadmapItem": {
-        "additionalProperties": false,
         "properties": {
           "type": {
-            "$ref": "#/$defs/RoadmapType"
+            "$ref": "#/components/schemas/RoadmapType"
           },
           "start_month": {
-            "title": "Start Month",
-            "type": "string"
+            "type": "string",
+            "title": "Start Month"
           },
           "end_month": {
-            "title": "End Month",
-            "type": "string"
+            "type": "string",
+            "title": "End Month"
           },
           "product_id": {
             "anyOf": [
@@ -2119,7 +1328,6 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Product Id"
           },
           "source_policy_id": {
@@ -2131,374 +1339,96 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Source Policy Id"
           },
           "product_name": {
-            "title": "Product Name",
-            "type": "string"
+            "type": "string",
+            "title": "Product Name"
           },
           "monthly_amount": {
             "anyOf": [
               {
-                "minimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Monthly Amount"
           },
           "initial_amount": {
             "anyOf": [
               {
-                "minimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Initial Amount"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "type",
           "start_month",
           "end_month",
           "product_name"
         ],
-        "title": "RoadmapItem",
-        "type": "object"
+        "title": "RoadmapItem"
       },
       "RoadmapType": {
+        "type": "string",
         "enum": [
           "POLICY_SAVING",
           "GENERAL_SAVING",
           "MATURITY_REINVESTMENT"
         ],
-        "title": "RoadmapType",
-        "type": "string"
+        "title": "RoadmapType"
       },
-      "SimulationResult": {
-        "additionalProperties": false,
+      "ScenarioApplyRequest": {
         "properties": {
-          "initial_assets": {
-            "minimum": 0,
-            "title": "Initial Assets",
-            "type": "integer"
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
           },
-          "principal": {
-            "minimum": 0,
-            "title": "Principal",
-            "type": "integer"
-          },
-          "gross_interest": {
-            "minimum": 0,
-            "title": "Gross Interest",
-            "type": "integer"
-          },
-          "tax_paid": {
-            "minimum": 0,
-            "title": "Tax Paid",
-            "type": "integer"
-          },
-          "net_interest": {
-            "minimum": 0,
-            "title": "Net Interest",
-            "type": "integer"
-          },
-          "government_support": {
-            "minimum": 0,
-            "title": "Government Support",
-            "type": "integer"
-          },
-          "tax_benefit": {
-            "minimum": 0,
-            "title": "Tax Benefit",
-            "type": "integer"
-          },
-          "final_assets": {
-            "minimum": 0,
-            "title": "Final Assets",
-            "type": "integer"
-          },
-          "trajectory": {
+          "changes": {
             "items": {
-              "$ref": "#/$defs/AssetPoint"
+              "$ref": "#/components/schemas/ScenarioChange"
             },
-            "title": "Trajectory",
-            "type": "array"
+            "type": "array",
+            "title": "Changes"
           }
         },
-        "required": [
-          "initial_assets",
-          "principal",
-          "gross_interest",
-          "tax_paid",
-          "net_interest",
-          "government_support",
-          "tax_benefit",
-          "final_assets"
-        ],
-        "title": "SimulationResult",
-        "type": "object"
-      },
-      "UserProfile": {
         "additionalProperties": false,
-        "properties": {
-          "age": {
-            "maximum": 120,
-            "minimum": 0,
-            "title": "Age",
-            "type": "integer"
-          },
-          "region": {
-            "minLength": 1,
-            "title": "Region",
-            "type": "string"
-          },
-          "employment_type": {
-            "$ref": "#/$defs/EmploymentType"
-          },
-          "company_size": {
-            "$ref": "#/$defs/CompanySize"
-          },
-          "annual_income": {
-            "minimum": 0,
-            "title": "Annual Income",
-            "type": "integer"
-          },
-          "employment_months": {
-            "minimum": 0,
-            "title": "Employment Months",
-            "type": "integer"
-          },
-          "current_assets": {
-            "minimum": 0,
-            "title": "Current Assets",
-            "type": "integer"
-          },
-          "monthly_saving_capacity": {
-            "minimum": 0,
-            "title": "Monthly Saving Capacity",
-            "type": "integer"
-          },
-          "housing_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Housing Status"
-          },
-          "household_income": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Household Income"
-          },
-          "marital_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Marital Status"
-          },
-          "target_assets": {
-            "exclusiveMinimum": 0,
-            "title": "Target Assets",
-            "type": "integer"
-          },
-          "target_years": {
-            "exclusiveMinimum": 0,
-            "maximum": 50,
-            "title": "Target Years",
-            "type": "integer"
-          },
-          "manual_confirmations": {
-            "additionalProperties": {
-              "type": "boolean"
-            },
-            "title": "Manual Confirmations",
-            "type": "object"
-          }
-        },
+        "type": "object",
         "required": [
-          "age",
-          "region",
-          "employment_type",
-          "company_size",
-          "annual_income",
-          "employment_months",
-          "current_assets",
-          "monthly_saving_capacity",
-          "target_assets",
-          "target_years"
+          "profile",
+          "changes"
         ],
-        "title": "UserProfile",
-        "type": "object"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "profile": {
-        "$ref": "#/$defs/UserProfile"
+        "title": "ScenarioApplyRequest"
       },
-      "policy_analysis": {
-        "items": {
-          "$ref": "#/$defs/PolicyAnalysis"
-        },
-        "title": "Policy Analysis",
-        "type": "array"
-      },
-      "excluded_policies": {
-        "items": {
-          "$ref": "#/$defs/OptimizationExclusion"
-        },
-        "title": "Excluded Policies",
-        "type": "array"
-      },
-      "baseline": {
-        "$ref": "#/$defs/SimulationResult"
-      },
-      "optimized": {
-        "$ref": "#/$defs/SimulationResult"
-      },
-      "policy_effect": {
-        "$ref": "#/$defs/PolicyEffect"
-      },
-      "goal": {
-        "$ref": "#/$defs/GoalResult"
-      },
-      "goal_seeking": {
-        "anyOf": [
-          {
-            "$ref": "#/$defs/GoalSeekingResult"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null
-      },
-      "roadmap": {
-        "items": {
-          "$ref": "#/$defs/RoadmapItem"
-        },
-        "title": "Roadmap",
-        "type": "array"
-      },
-      "assumptions": {
-        "$ref": "#/$defs/Assumptions"
-      }
-    },
-    "required": [
-      "profile",
-      "policy_analysis",
-      "baseline",
-      "optimized",
-      "policy_effect",
-      "goal",
-      "roadmap",
-      "assumptions"
-    ],
-    "title": "AnalyzeResponse",
-    "type": "object"
-  },
-  "ScenarioChange": {
-    "$defs": {
-      "ScenarioField": {
-        "enum": [
-          "age",
-          "region",
-          "employment_type",
-          "company_size",
-          "annual_income",
-          "employment_months",
-          "current_assets",
-          "monthly_saving_capacity",
-          "housing_status",
-          "household_income",
-          "marital_status",
-          "target_assets",
-          "target_years"
-        ],
-        "title": "ScenarioField",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "field": {
-        "$ref": "#/$defs/ScenarioField"
-      },
-      "value": {
-        "title": "Value"
-      }
-    },
-    "required": [
-      "field",
-      "value"
-    ],
-    "title": "ScenarioChange",
-    "type": "object"
-  },
-  "ScenarioParseRequest": {
-    "additionalProperties": false,
-    "properties": {
-      "text": {
-        "maxLength": 1000,
-        "minLength": 1,
-        "title": "Text",
-        "type": "string"
-      }
-    },
-    "required": [
-      "text"
-    ],
-    "title": "ScenarioParseRequest",
-    "type": "object"
-  },
-  "ScenarioParseResponse": {
-    "$defs": {
       "ScenarioChange": {
-        "additionalProperties": false,
         "properties": {
           "field": {
-            "$ref": "#/$defs/ScenarioField"
+            "$ref": "#/components/schemas/ScenarioField"
           },
           "value": {
             "title": "Value"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "field",
           "value"
         ],
-        "title": "ScenarioChange",
-        "type": "object"
+        "title": "ScenarioChange"
       },
       "ScenarioField": {
+        "type": "string",
         "enum": [
           "age",
           "region",
@@ -2514,443 +1444,293 @@
           "target_assets",
           "target_years"
         ],
-        "title": "ScenarioField",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "changes": {
-        "items": {
-          "$ref": "#/$defs/ScenarioChange"
-        },
-        "title": "Changes",
-        "type": "array"
+        "title": "ScenarioField"
       },
-      "notice": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Notice"
-      }
-    },
-    "required": [
-      "changes"
-    ],
-    "title": "ScenarioParseResponse",
-    "type": "object"
-  },
-  "ScenarioApplyRequest": {
-    "$defs": {
-      "CompanySize": {
-        "enum": [
-          "SME",
-          "MID",
-          "LARGE",
-          "PUBLIC",
-          "NONE",
-          "OTHER"
-        ],
-        "title": "CompanySize",
-        "type": "string"
-      },
-      "EmploymentType": {
-        "enum": [
-          "EMPLOYEE",
-          "SELF_EMPLOYED",
-          "FREELANCER",
-          "UNEMPLOYED",
-          "OTHER"
-        ],
-        "title": "EmploymentType",
-        "type": "string"
-      },
-      "ScenarioChange": {
-        "additionalProperties": false,
+      "ScenarioParseRequest": {
         "properties": {
-          "field": {
-            "$ref": "#/$defs/ScenarioField"
-          },
-          "value": {
-            "title": "Value"
-          }
-        },
-        "required": [
-          "field",
-          "value"
-        ],
-        "title": "ScenarioChange",
-        "type": "object"
-      },
-      "ScenarioField": {
-        "enum": [
-          "age",
-          "region",
-          "employment_type",
-          "company_size",
-          "annual_income",
-          "employment_months",
-          "current_assets",
-          "monthly_saving_capacity",
-          "housing_status",
-          "household_income",
-          "marital_status",
-          "target_assets",
-          "target_years"
-        ],
-        "title": "ScenarioField",
-        "type": "string"
-      },
-      "UserProfile": {
-        "additionalProperties": false,
-        "properties": {
-          "age": {
-            "maximum": 120,
-            "minimum": 0,
-            "title": "Age",
-            "type": "integer"
-          },
-          "region": {
+          "text": {
+            "type": "string",
+            "maxLength": 1000,
             "minLength": 1,
-            "title": "Region",
-            "type": "string"
-          },
-          "employment_type": {
-            "$ref": "#/$defs/EmploymentType"
-          },
-          "company_size": {
-            "$ref": "#/$defs/CompanySize"
-          },
-          "annual_income": {
-            "minimum": 0,
-            "title": "Annual Income",
-            "type": "integer"
-          },
-          "employment_months": {
-            "minimum": 0,
-            "title": "Employment Months",
-            "type": "integer"
-          },
-          "current_assets": {
-            "minimum": 0,
-            "title": "Current Assets",
-            "type": "integer"
-          },
-          "monthly_saving_capacity": {
-            "minimum": 0,
-            "title": "Monthly Saving Capacity",
-            "type": "integer"
-          },
-          "housing_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Housing Status"
-          },
-          "household_income": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Household Income"
-          },
-          "marital_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Marital Status"
-          },
-          "target_assets": {
-            "exclusiveMinimum": 0,
-            "title": "Target Assets",
-            "type": "integer"
-          },
-          "target_years": {
-            "exclusiveMinimum": 0,
-            "maximum": 50,
-            "title": "Target Years",
-            "type": "integer"
-          },
-          "manual_confirmations": {
-            "additionalProperties": {
-              "type": "boolean"
-            },
-            "title": "Manual Confirmations",
-            "type": "object"
+            "title": "Text"
           }
         },
-        "required": [
-          "age",
-          "region",
-          "employment_type",
-          "company_size",
-          "annual_income",
-          "employment_months",
-          "current_assets",
-          "monthly_saving_capacity",
-          "target_assets",
-          "target_years"
-        ],
-        "title": "UserProfile",
-        "type": "object"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "profile": {
-        "$ref": "#/$defs/UserProfile"
-      },
-      "changes": {
-        "items": {
-          "$ref": "#/$defs/ScenarioChange"
-        },
-        "title": "Changes",
-        "type": "array"
-      }
-    },
-    "required": [
-      "profile",
-      "changes"
-    ],
-    "title": "ScenarioApplyRequest",
-    "type": "object"
-  },
-  "EligibilityRequest": {
-    "$defs": {
-      "CompanySize": {
-        "enum": [
-          "SME",
-          "MID",
-          "LARGE",
-          "PUBLIC",
-          "NONE",
-          "OTHER"
-        ],
-        "title": "CompanySize",
-        "type": "string"
-      },
-      "EmploymentType": {
-        "enum": [
-          "EMPLOYEE",
-          "SELF_EMPLOYED",
-          "FREELANCER",
-          "UNEMPLOYED",
-          "OTHER"
-        ],
-        "title": "EmploymentType",
-        "type": "string"
-      },
-      "UserProfile": {
         "additionalProperties": false,
-        "properties": {
-          "age": {
-            "maximum": 120,
-            "minimum": 0,
-            "title": "Age",
-            "type": "integer"
-          },
-          "region": {
-            "minLength": 1,
-            "title": "Region",
-            "type": "string"
-          },
-          "employment_type": {
-            "$ref": "#/$defs/EmploymentType"
-          },
-          "company_size": {
-            "$ref": "#/$defs/CompanySize"
-          },
-          "annual_income": {
-            "minimum": 0,
-            "title": "Annual Income",
-            "type": "integer"
-          },
-          "employment_months": {
-            "minimum": 0,
-            "title": "Employment Months",
-            "type": "integer"
-          },
-          "current_assets": {
-            "minimum": 0,
-            "title": "Current Assets",
-            "type": "integer"
-          },
-          "monthly_saving_capacity": {
-            "minimum": 0,
-            "title": "Monthly Saving Capacity",
-            "type": "integer"
-          },
-          "housing_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Housing Status"
-          },
-          "household_income": {
-            "anyOf": [
-              {
-                "minimum": 0,
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Household Income"
-          },
-          "marital_status": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Marital Status"
-          },
-          "target_assets": {
-            "exclusiveMinimum": 0,
-            "title": "Target Assets",
-            "type": "integer"
-          },
-          "target_years": {
-            "exclusiveMinimum": 0,
-            "maximum": 50,
-            "title": "Target Years",
-            "type": "integer"
-          },
-          "manual_confirmations": {
-            "additionalProperties": {
-              "type": "boolean"
-            },
-            "title": "Manual Confirmations",
-            "type": "object"
-          }
-        },
+        "type": "object",
         "required": [
-          "age",
-          "region",
-          "employment_type",
-          "company_size",
-          "annual_income",
-          "employment_months",
-          "current_assets",
-          "monthly_saving_capacity",
-          "target_assets",
-          "target_years"
+          "text"
         ],
-        "title": "UserProfile",
-        "type": "object"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "profile": {
-        "$ref": "#/$defs/UserProfile"
+        "title": "ScenarioParseRequest"
       },
-      "policy_ids": {
-        "anyOf": [
-          {
+      "ScenarioParseResponse": {
+        "properties": {
+          "changes": {
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/ScenarioChange"
             },
-            "type": "array"
+            "type": "array",
+            "title": "Changes"
           },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Policy Ids"
-      }
-    },
-    "required": [
-      "profile"
-    ],
-    "title": "EligibilityRequest",
-    "type": "object"
-  },
-  "EligibilityResponse": {
-    "$defs": {
-      "EligibilityCheck": {
-        "additionalProperties": false,
-        "properties": {
-          "field": {
-            "title": "Field",
-            "type": "string"
-          },
-          "basis": {
+          "notice": {
             "anyOf": [
               {
-                "$ref": "#/$defs/IncomeBasis"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "default": null
+            "title": "Notice"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "changes"
+        ],
+        "title": "ScenarioParseResponse"
+      },
+      "SimulationRequest": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
           },
-          "required": {
-            "additionalProperties": true,
-            "title": "Required",
-            "type": "object"
+          "allocations": {
+            "items": {
+              "$ref": "#/components/schemas/PolicyAllocation"
+            },
+            "type": "array",
+            "title": "Allocations"
           },
-          "actual": {
+          "horizon_months": {
             "anyOf": [
-              {},
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
               {
                 "type": "null"
               }
             ],
-            "default": null,
-            "title": "Actual"
-          },
+            "title": "Horizon Months"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile"
+        ],
+        "title": "SimulationRequest"
+      },
+      "SimulationResponse": {
+        "properties": {
           "result": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "default": null,
-            "title": "Result"
+            "$ref": "#/components/schemas/SimulationResult"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "result"
+        ],
+        "title": "SimulationResponse"
+      },
+      "SimulationResult": {
+        "properties": {
+          "initial_assets": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Initial Assets"
           },
-          "reason": {
+          "principal": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Principal"
+          },
+          "gross_interest": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Gross Interest"
+          },
+          "tax_paid": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Tax Paid"
+          },
+          "net_interest": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Net Interest"
+          },
+          "government_support": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Government Support"
+          },
+          "tax_benefit": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Tax Benefit"
+          },
+          "final_assets": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Final Assets"
+          },
+          "trajectory": {
+            "items": {
+              "$ref": "#/components/schemas/AssetPoint"
+            },
+            "type": "array",
+            "title": "Trajectory"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "initial_assets",
+          "principal",
+          "gross_interest",
+          "tax_paid",
+          "net_interest",
+          "government_support",
+          "tax_benefit",
+          "final_assets"
+        ],
+        "title": "SimulationResult"
+      },
+      "SpendingCategory": {
+        "type": "string",
+        "enum": [
+          "FOOD",
+          "DELIVERY",
+          "CAFE",
+          "TRANSPORT",
+          "CONVENIENCE",
+          "SHOPPING",
+          "SUBSCRIPTION",
+          "TELECOM",
+          "BEAUTY",
+          "CULTURE",
+          "ENTERTAINMENT",
+          "ONLINE",
+          "GROCERIES",
+          "FUEL",
+          "HOUSING",
+          "MEDICAL",
+          "EDUCATION",
+          "OTHER"
+        ],
+        "title": "SpendingCategory"
+      },
+      "SpendingCutItem": {
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/SpendingCategory"
+          },
+          "current_monthly_amount": {
+            "type": "integer",
+            "title": "Current Monthly Amount"
+          },
+          "assumed_cut_percent": {
+            "type": "integer",
+            "title": "Assumed Cut Percent"
+          },
+          "monthly_saving": {
+            "type": "integer",
+            "title": "Monthly Saving"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "current_monthly_amount",
+          "assumed_cut_percent",
+          "monthly_saving"
+        ],
+        "title": "SpendingCutItem"
+      },
+      "SpendingOptimizationResponse": {
+        "properties": {
+          "total_monthly_spend": {
+            "type": "integer",
+            "title": "Total Monthly Spend"
+          },
+          "discretionary_monthly_spend": {
+            "type": "integer",
+            "title": "Discretionary Monthly Spend"
+          },
+          "cut_scenario_monthly_saving": {
+            "type": "integer",
+            "title": "Cut Scenario Monthly Saving"
+          },
+          "cut_items": {
+            "items": {
+              "$ref": "#/components/schemas/SpendingCutItem"
+            },
+            "type": "array",
+            "title": "Cut Items"
+          },
+          "current_card_estimated_net_benefit": {
+            "type": "integer",
+            "title": "Current Card Estimated Net Benefit"
+          },
+          "best_card_incremental_monthly_benefit": {
+            "type": "integer",
+            "title": "Best Card Incremental Monthly Benefit"
+          },
+          "total_extra_monthly_saving": {
+            "type": "integer",
+            "title": "Total Extra Monthly Saving"
+          },
+          "enhanced_monthly_saving_capacity": {
+            "type": "integer",
+            "title": "Enhanced Monthly Saving Capacity"
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/CardRecommendation"
+            },
+            "type": "array",
+            "title": "Recommendations"
+          },
+          "enhanced_analysis": {
+            "$ref": "#/components/schemas/AnalyzeResponse"
+          },
+          "notice": {
+            "type": "string",
+            "title": "Notice"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_monthly_spend",
+          "discretionary_monthly_spend",
+          "cut_scenario_monthly_saving",
+          "cut_items",
+          "current_card_estimated_net_benefit",
+          "best_card_incremental_monthly_benefit",
+          "total_extra_monthly_saving",
+          "enhanced_monthly_saving_capacity",
+          "recommendations",
+          "enhanced_analysis",
+          "notice"
+        ],
+        "title": "SpendingOptimizationResponse"
+      },
+      "SpendingProfile": {
+        "properties": {
+          "categories": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/SpendingCategory"
+            },
+            "type": "object",
+            "title": "Categories"
+          },
+          "current_card_id": {
             "anyOf": [
               {
                 "type": "string"
@@ -2959,166 +1739,119 @@
                 "type": "null"
               }
             ],
-            "default": null,
-            "title": "Reason"
+            "title": "Current Card Id"
+          },
+          "card_type_preference": {
+            "$ref": "#/components/schemas/CardTypePreference",
+            "default": "BOTH"
+          },
+          "cut_percent": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 0.0,
+            "title": "Cut Percent",
+            "default": 10
           }
         },
-        "required": [
-          "field"
-        ],
-        "title": "EligibilityCheck",
-        "type": "object"
+        "type": "object",
+        "title": "SpendingProfile"
       },
-      "EligibilityResult": {
-        "additionalProperties": false,
+      "SpendingRecommendationRequest": {
         "properties": {
-          "policy_id": {
-            "title": "Policy Id",
-            "type": "string"
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
           },
-          "status": {
-            "$ref": "#/$defs/EligibilityStatus"
-          },
-          "checks": {
-            "items": {
-              "$ref": "#/$defs/EligibilityCheck"
-            },
-            "title": "Checks",
-            "type": "array"
-          },
-          "missing_fields": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Missing Fields",
-            "type": "array"
+          "spending": {
+            "$ref": "#/components/schemas/SpendingProfile"
           }
         },
+        "type": "object",
         "required": [
-          "policy_id",
-          "status"
+          "profile",
+          "spending"
         ],
-        "title": "EligibilityResult",
-        "type": "object"
+        "title": "SpendingRecommendationRequest"
       },
-      "EligibilityStatus": {
-        "enum": [
-          "ELIGIBLE",
-          "INELIGIBLE",
-          "NEEDS_MORE_INFORMATION"
-        ],
-        "title": "EligibilityStatus",
-        "type": "string"
-      },
-      "IncomeBasis": {
-        "enum": [
-          "PERSONAL",
-          "HOUSEHOLD"
-        ],
-        "title": "IncomeBasis",
-        "type": "string"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "results": {
-        "items": {
-          "$ref": "#/$defs/EligibilityResult"
-        },
-        "title": "Results",
-        "type": "array"
-      }
-    },
-    "required": [
-      "results"
-    ],
-    "title": "EligibilityResponse",
-    "type": "object"
-  },
-  "SimulationRequest": {
-    "$defs": {
-      "CompanySize": {
-        "enum": [
-          "SME",
-          "MID",
-          "LARGE",
-          "PUBLIC",
-          "NONE",
-          "OTHER"
-        ],
-        "title": "CompanySize",
-        "type": "string"
-      },
-      "EmploymentType": {
-        "enum": [
-          "EMPLOYEE",
-          "SELF_EMPLOYED",
-          "FREELANCER",
-          "UNEMPLOYED",
-          "OTHER"
-        ],
-        "title": "EmploymentType",
-        "type": "string"
-      },
-      "PolicyAllocation": {
-        "additionalProperties": false,
+      "SpendingUploadResponse": {
         "properties": {
-          "policy_id": {
-            "title": "Policy Id",
-            "type": "string"
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/ParsedTransaction"
+            },
+            "type": "array",
+            "title": "Transactions"
           },
-          "monthly_amount": {
-            "exclusiveMinimum": 0,
-            "title": "Monthly Amount",
-            "type": "integer"
+          "monthly_categories": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/SpendingCategory"
+            },
+            "type": "object",
+            "title": "Monthly Categories"
+          },
+          "months_count": {
+            "type": "integer",
+            "title": "Months Count"
+          },
+          "total_rows": {
+            "type": "integer",
+            "title": "Total Rows"
+          },
+          "notice": {
+            "type": "string",
+            "title": "Notice"
           }
         },
+        "type": "object",
         "required": [
-          "policy_id",
-          "monthly_amount"
+          "transactions",
+          "monthly_categories",
+          "months_count",
+          "total_rows",
+          "notice"
         ],
-        "title": "PolicyAllocation",
-        "type": "object"
+        "title": "SpendingUploadResponse"
       },
       "UserProfile": {
-        "additionalProperties": false,
         "properties": {
           "age": {
-            "maximum": 120,
-            "minimum": 0,
-            "title": "Age",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 120.0,
+            "minimum": 0.0,
+            "title": "Age"
           },
           "region": {
+            "type": "string",
             "minLength": 1,
-            "title": "Region",
-            "type": "string"
+            "title": "Region"
           },
           "employment_type": {
-            "$ref": "#/$defs/EmploymentType"
+            "$ref": "#/components/schemas/EmploymentType"
           },
           "company_size": {
-            "$ref": "#/$defs/CompanySize"
+            "$ref": "#/components/schemas/CompanySize"
           },
           "annual_income": {
-            "minimum": 0,
-            "title": "Annual Income",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Annual Income"
           },
           "employment_months": {
-            "minimum": 0,
-            "title": "Employment Months",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Employment Months"
           },
           "current_assets": {
-            "minimum": 0,
-            "title": "Current Assets",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Current Assets"
           },
           "monthly_saving_capacity": {
-            "minimum": 0,
-            "title": "Monthly Saving Capacity",
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Monthly Saving Capacity"
           },
           "housing_status": {
             "anyOf": [
@@ -3129,20 +1862,18 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Housing Status"
           },
           "household_income": {
             "anyOf": [
               {
-                "minimum": 0,
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Household Income"
           },
           "marital_status": {
@@ -3154,28 +1885,29 @@
                 "type": "null"
               }
             ],
-            "default": null,
             "title": "Marital Status"
           },
           "target_assets": {
-            "exclusiveMinimum": 0,
-            "title": "Target Assets",
-            "type": "integer"
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Target Assets"
           },
           "target_years": {
-            "exclusiveMinimum": 0,
-            "maximum": 50,
-            "title": "Target Years",
-            "type": "integer"
+            "type": "integer",
+            "maximum": 50.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Target Years"
           },
           "manual_confirmations": {
             "additionalProperties": {
               "type": "boolean"
             },
-            "title": "Manual Confirmations",
-            "type": "object"
+            "type": "object",
+            "title": "Manual Confirmations"
           }
         },
+        "additionalProperties": false,
+        "type": "object",
         "required": [
           "age",
           "region",
@@ -3188,176 +1920,48 @@
           "target_assets",
           "target_years"
         ],
-        "title": "UserProfile",
-        "type": "object"
-      }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "profile": {
-        "$ref": "#/$defs/UserProfile"
+        "title": "UserProfile"
       },
-      "allocations": {
-        "items": {
-          "$ref": "#/$defs/PolicyAllocation"
-        },
-        "title": "Allocations",
-        "type": "array"
-      },
-      "horizon_months": {
-        "anyOf": [
-          {
-            "exclusiveMinimum": 0,
-            "type": "integer"
-          },
-          {
-            "type": "null"
-          }
-        ],
-        "default": null,
-        "title": "Horizon Months"
-      }
-    },
-    "required": [
-      "profile"
-    ],
-    "title": "SimulationRequest",
-    "type": "object"
-  },
-  "SimulationResponse": {
-    "$defs": {
-      "AssetPoint": {
-        "additionalProperties": false,
+      "ValidationError": {
         "properties": {
-          "month": {
-            "minimum": 0,
-            "title": "Month",
-            "type": "integer"
-          },
-          "total_assets": {
-            "minimum": 0,
-            "title": "Total Assets",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "month",
-          "total_assets"
-        ],
-        "title": "AssetPoint",
-        "type": "object"
-      },
-      "SimulationResult": {
-        "additionalProperties": false,
-        "properties": {
-          "initial_assets": {
-            "minimum": 0,
-            "title": "Initial Assets",
-            "type": "integer"
-          },
-          "principal": {
-            "minimum": 0,
-            "title": "Principal",
-            "type": "integer"
-          },
-          "gross_interest": {
-            "minimum": 0,
-            "title": "Gross Interest",
-            "type": "integer"
-          },
-          "tax_paid": {
-            "minimum": 0,
-            "title": "Tax Paid",
-            "type": "integer"
-          },
-          "net_interest": {
-            "minimum": 0,
-            "title": "Net Interest",
-            "type": "integer"
-          },
-          "government_support": {
-            "minimum": 0,
-            "title": "Government Support",
-            "type": "integer"
-          },
-          "tax_benefit": {
-            "minimum": 0,
-            "title": "Tax Benefit",
-            "type": "integer"
-          },
-          "final_assets": {
-            "minimum": 0,
-            "title": "Final Assets",
-            "type": "integer"
-          },
-          "trajectory": {
+          "loc": {
             "items": {
-              "$ref": "#/$defs/AssetPoint"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
             },
-            "title": "Trajectory",
-            "type": "array"
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
           }
         },
+        "type": "object",
         "required": [
-          "initial_assets",
-          "principal",
-          "gross_interest",
-          "tax_paid",
-          "net_interest",
-          "government_support",
-          "tax_benefit",
-          "final_assets"
+          "loc",
+          "msg",
+          "type"
         ],
-        "title": "SimulationResult",
-        "type": "object"
+        "title": "ValidationError"
       }
-    },
-    "additionalProperties": false,
-    "properties": {
-      "result": {
-        "$ref": "#/$defs/SimulationResult"
-      }
-    },
-    "required": [
-      "result"
-    ],
-    "title": "SimulationResponse",
-    "type": "object"
-  },
-  "BaselineConfig": {
-    "additionalProperties": false,
-    "properties": {
-      "annual_rate": {
-        "maximum": 1,
-        "minimum": 0,
-        "title": "Annual Rate",
-        "type": "number"
-      },
-      "source_name": {
-        "minLength": 1,
-        "title": "Source Name",
-        "type": "string"
-      },
-      "source_url": {
-        "format": "uri",
-        "maxLength": 2083,
-        "minLength": 1,
-        "title": "Source Url",
-        "type": "string"
-      },
-      "checked_at": {
-        "format": "date",
-        "title": "Checked At",
-        "type": "string"
-      }
-    },
-    "required": [
-      "annual_rate",
-      "source_name",
-      "source_url",
-      "checked_at"
-    ],
-    "title": "BaselineConfig",
-    "type": "object"
+    }
   }
 }

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "KB_NORI2_KBPAY_CHECK",
+    "issuer": "KB국민카드",
+    "name": "노리2 체크카드(KB Pay)",
+    "card_type": "CHECK",
+    "annual_fee": 0,
+    "minimum_monthly_spend": 200000,
+    "calculator": "KB_NORI2_KBPAY",
+    "source_url": "https://card.kbcard.com/CRD/DVIEW/HCAMCXPRICAC0076?cooperationcode=07964&mainCC=a",
+    "checked_at": "2026-09-02",
+    "notes": [
+      "일상혜택은 전월 이용실적 20만원 이상 기준으로 계산합니다.",
+      "KB Pay 추가할인은 결제수단 식별 데이터가 없어 MVP 계산에서 제외합니다.",
+      "커피·뷰티·편의점 중심의 확인 가능한 혜택만 보수적으로 반영합니다."
+    ]
+  },
+  {
+    "id": "SHINHAN_PICK_E_CHECK",
+    "issuer": "신한카드",
+    "name": "신한카드 Pick E 체크",
+    "card_type": "CHECK",
+    "annual_fee": 0,
+    "minimum_monthly_spend": 200000,
+    "calculator": "SHINHAN_PICK_E",
+    "source_url": "https://www.shinhancard.com/pconts/html/card/apply/check/1221536_2206.html",
+    "checked_at": "2026-09-02",
+    "notes": [
+      "편의점·커피 10% 적립을 월 3회, 1회 최대 1천 포인트 기준으로 보수 계산합니다.",
+      "One Pick 맛집·해외·놀이 혜택은 거래 횟수/가맹점 세부정보가 없어 MVP 계산에서 제외합니다."
+    ]
+  },
+  {
+    "id": "HYUNDAI_D_CREDIT",
+    "issuer": "현대카드",
+    "name": "현대카드D",
+    "card_type": "CREDIT",
+    "annual_fee": 15000,
+    "minimum_monthly_spend": 400000,
+    "calculator": "HYUNDAI_D",
+    "source_url": "https://card.hyundaicard.com/magazine/%EC%A7%81%EC%9E%A5%EC%9D%B8-%EC%8B%A0%EC%9A%A9%EC%B9%B4%EB%93%9C-%EC%B6%94%EC%B2%9C-%EA%B5%90%ED%86%B5%EB%B9%84-%EC%BB%A4%ED%94%BC-%EB%B0%B0%EB%8B%AC-%EC%95%B1-%ED%95%A0%EC%9D%B8.hdc",
+    "checked_at": "2026-09-02",
+    "notes": [
+      "외식·배달 10%, 카페·편의점·대중교통 5%와 전월실적별 한도를 반영합니다.",
+      "연회비 1만5천원을 12개월로 나눠 월 순혜택에서 차감합니다.",
+      "혜택 적용 결제의 실적 제외 등 세부 가맹점 조건 때문에 실제 혜택은 달라질 수 있습니다."
+    ]
+  },
+  {
+    "id": "HYUNDAI_Z_EVERYDAY_CREDIT",
+    "issuer": "현대카드",
+    "name": "현대카드Z everyday",
+    "card_type": "CREDIT",
+    "annual_fee": 20000,
+    "minimum_monthly_spend": 500000,
+    "calculator": "HYUNDAI_Z_EVERYDAY",
+    "source_url": "https://card.hyundaicard.com/card/%EA%B5%AC%EA%B0%84%EB%B0%98%EB%B3%B5%ED%95%A0%EC%9D%B8.hdc",
+    "checked_at": "2026-09-02",
+    "notes": [
+      "9개 생활영역 5% 할인과 전월실적별 통합한도를 반영합니다.",
+      "주말 외식·주유·마트 10% 추가혜택은 보수적으로 미반영합니다.",
+      "연회비 2만원을 12개월로 나눠 월 순혜택에서 차감합니다."
+    ]
+  }
+]
