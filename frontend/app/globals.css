@@ -4,6 +4,9 @@
 
 :root { color-scheme: light; }
 * { box-sizing: border-box; }
-body { margin: 0; background: #f8fafc; }
-button, a, input, select, textarea { transition: opacity .15s ease, border-color .15s ease, background-color .15s ease; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #f8fafc; color: #0f172a; }
+button, a, input, select, textarea { transition: opacity .15s ease, border-color .15s ease, background-color .15s ease, transform .15s ease; }
 button:disabled { opacity: .55; cursor: not-allowed; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #0f172a; outline-offset: 2px; }
+summary::-webkit-details-marker { display: none; }
