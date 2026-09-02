@@ -102,3 +102,72 @@ export type AnalyzeResponse = {
 };
 
 export type ScenarioChange = { field: string; value: unknown };
+
+export type SpendingCategory =
+  | "FOOD" | "DELIVERY" | "CAFE" | "TRANSPORT" | "CONVENIENCE"
+  | "SHOPPING" | "SUBSCRIPTION" | "TELECOM" | "BEAUTY" | "CULTURE"
+  | "ENTERTAINMENT" | "ONLINE" | "GROCERIES" | "FUEL" | "HOUSING"
+  | "MEDICAL" | "EDUCATION" | "OTHER";
+
+export type CardType = "CHECK" | "CREDIT";
+export type CardTypePreference = "BOTH" | "CHECK" | "CREDIT";
+
+export type CardCatalogItem = {
+  id: string;
+  issuer: string;
+  name: string;
+  card_type: CardType;
+  annual_fee: number;
+  minimum_monthly_spend: number;
+  source_url: string;
+  checked_at: string;
+  notes: string[];
+};
+
+export type SpendingOptimizationResponse = {
+  total_monthly_spend: number;
+  discretionary_monthly_spend: number;
+  cut_scenario_monthly_saving: number;
+  cut_items: {
+    category: SpendingCategory;
+    current_monthly_amount: number;
+    assumed_cut_percent: number;
+    monthly_saving: number;
+  }[];
+  current_card_estimated_net_benefit: number;
+  best_card_incremental_monthly_benefit: number;
+  total_extra_monthly_saving: number;
+  enhanced_monthly_saving_capacity: number;
+  recommendations: {
+    card_id: string;
+    issuer: string;
+    name: string;
+    card_type: CardType;
+    annual_fee: number;
+    minimum_monthly_spend: number;
+    eligible_without_extra_spend: boolean;
+    estimated_gross_monthly_benefit: number;
+    estimated_monthly_fee: number;
+    estimated_net_monthly_benefit: number;
+    incremental_monthly_benefit_vs_current: number;
+    benefit_breakdown: { label: string; amount: number }[];
+    source_url: string;
+    checked_at: string;
+    notes: string[];
+  }[];
+  enhanced_analysis: AnalyzeResponse;
+  notice: string;
+};
+
+export type SpendingUploadResponse = {
+  transactions: {
+    date?: string | null;
+    description: string;
+    amount: number;
+    category: SpendingCategory;
+  }[];
+  monthly_categories: Partial<Record<SpendingCategory, number>>;
+  months_count: number;
+  total_rows: number;
+  notice: string;
+};

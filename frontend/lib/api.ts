@@ -1,4 +1,4 @@
-import type { AnalyzeResponse, ScenarioChange, UserProfile } from "./types";
+import type { AnalyzeResponse, CardCatalogItem, CardTypePreference, ScenarioChange, SpendingCategory, SpendingOptimizationResponse, SpendingUploadResponse, UserProfile } from "./types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000";
 
@@ -37,4 +37,35 @@ export function applyScenario(profile: UserProfile, changes: ScenarioChange[]) {
     method: "POST",
     body: JSON.stringify({ profile, changes }),
   });
+}
+
+
+export function getCards() {
+  return request<CardCatalogItem[]>("/api/cards");
+}
+
+export function recommendSpending(profile: UserProfile, categories: Partial<Record<SpendingCategory, number>>, options?: { current_card_id?: string | null; card_type_preference?: CardTypePreference; cut_percent?: number; }) {
+  return request<SpendingOptimizationResponse>("/api/spending/recommend", {
+    method: "POST",
+    body: JSON.stringify({
+      profile,
+      spending: {
+        categories,
+        current_card_id: options?.current_card_id || null,
+        card_type_preference: options?.card_type_preference || "BOTH",
+        cut_percent: options?.cut_percent ?? 10,
+      },
+    }),
+  });
+}
+
+export async function uploadSpendingFile(file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  const response = await fetch(`${API_BASE}/api/spending/upload`, { method: "POST", body: form });
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(body || `HTTP ${response.status}`);
+  }
+  return response.json() as Promise<SpendingUploadResponse>;
 }
