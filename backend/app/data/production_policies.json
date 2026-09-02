@@ -846,5 +846,143 @@
     "updated_at": "2026-08-30T03:20:00+09:00",
     "application_status": "CLOSED",
     "application_period_text": "2026-02-04 접수 개시 후 예산 소진으로 조기 마감"
+  },
+  {
+    "id": "HOPE_SAVINGS_I_2026",
+    "name": "희망저축계좌Ⅰ (2026)",
+    "description": "일하는 생계·의료급여 수급가구 대상 자산형성지원. 월 10만원 이상 저축 시 정부지원금 월 30만원을 적립하며, 전액 지급은 3년 이내 탈수급 등 지급요건 충족을 전제로 합니다. 예금이자는 금리 불확실성 때문에 FinPath 계산에서 0%로 보수적으로 반영합니다.",
+    "min_age": null,
+    "max_age": null,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "hope1_current_eligibility",
+        "label": "희망저축계좌Ⅰ 현재 가입대상",
+        "description": "현재 근로활동 중인 생계·의료급여 수급가구이며 공식 소득기준을 충족하는지 확인합니다.",
+        "source_url": "https://hope.welfareinfo.or.kr/bsns/bsnsIntrcnAcc.do",
+        "preview_assumable": false
+      },
+      {
+        "id": "hope1_full_payment_condition",
+        "label": "정부지원금 전액 지급요건",
+        "description": "3년 이내 생계·의료급여 탈수급 등 전액 지급요건을 충족한다고 가정할 때의 시뮬레이션입니다.",
+        "source_url": "https://www.mohw.go.kr/menu.es?mid=a10708020400",
+        "preview_assumable": false
+      },
+      {
+        "id": "hope1_duplicate_check",
+        "label": "자산형성지원 중복가입 제한 확인",
+        "description": "중복가입 이력 등 최종 제한사항을 주민센터 또는 자산형성포털 기준으로 확인해야 합니다.",
+        "source_url": "https://hope.welfareinfo.or.kr/pds/GuideLine.pdf",
+        "preview_assumable": false
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 500000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 3.0,
+        "monthly_contribution_cap": 100000,
+        "monthly_government_cap": 300000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0.0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": "2026-09-01",
+    "end_date": "2026-09-14",
+    "incompatible_policy_ids": [
+      "YOUTH_TOMORROW_SAVINGS_2026"
+    ],
+    "source_url": "https://www.dobong.go.kr/Contents.asp?code=10009121",
+    "effective_date": "2026-09-01",
+    "checked_at": "2026-09-02T15:30:00+09:00",
+    "updated_at": "2026-09-02T15:30:00+09:00",
+    "application_status": "OPEN",
+    "application_period_text": "2026년 3차 모집 9월 1일~9월 14일. 지역별 접수 운영은 주소지 주민센터에서 최종 확인이 필요합니다."
+  },
+  {
+    "id": "YOUTH_TOMORROW_SAVINGS_2026",
+    "name": "청년내일저축계좌 (2026)",
+    "description": "기준 중위소득 50% 이하의 일하는 만 15~39세 청년 대상. 본인 월 10만원 저축 시 정부가 월 30만원 정액 매칭하며, 3년 유지·근로활동·교육·자금사용계획서 등 지급요건 충족 시 적립금 전액 지급. 2026년 신규 모집은 5월 20일 종료되었습니다.",
+    "min_age": 15,
+    "max_age": 39,
+    "income_conditions": [],
+    "manual_requirements": [
+      {
+        "id": "monthly_earned_income_100k",
+        "label": "월 근로·사업소득 10만원 이상",
+        "description": "청년 본인의 세전 근로·사업소득이 월 10만원 이상 발생해야 합니다.",
+        "source_url": "https://www.bokjiro.go.kr/ssis-tbu/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00000060",
+        "preview_assumable": false
+      },
+      {
+        "id": "household_recognized_income_50",
+        "label": "가구 소득인정액 중위소득 50% 이하",
+        "description": "소득평가액과 재산환산액을 반영한 가구 소득인정액이 기준 중위소득 50% 이하여야 합니다.",
+        "source_url": "https://www.bokjiro.go.kr/ssis-tbu/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00000060",
+        "preview_assumable": false
+      },
+      {
+        "id": "youth_tomorrow_payout_conditions",
+        "label": "3년 유지·교육 등 지급요건",
+        "description": "3년간 통장 유지, 근로활동 지속, 교육 이수, 자금사용계획서 제출 등 전액 지급요건을 충족해야 합니다.",
+        "source_url": "https://www.mohw.go.kr/menu.es?mid=a10708020400",
+        "preview_assumable": false
+      }
+    ],
+    "allowed_regions": null,
+    "allowed_company_sizes": null,
+    "allowed_employment_types": [
+      "EMPLOYEE",
+      "SELF_EMPLOYED",
+      "FREELANCER",
+      "OTHER"
+    ],
+    "min_employment_months": null,
+    "max_employment_months": null,
+    "monthly_contribution_min": 100000,
+    "monthly_contribution_limit": 500000,
+    "government_contribution_tiers": [
+      {
+        "income_basis": "PERSONAL",
+        "max_income": null,
+        "rate": 3.0,
+        "monthly_contribution_cap": 100000,
+        "monthly_government_cap": 300000
+      }
+    ],
+    "government_support_timing": "AT_MATURITY",
+    "government_support_interest_bearing": false,
+    "interest_rate": 0.0,
+    "tax_treatment": "TAXABLE",
+    "tax_rate_override": null,
+    "duration_months": 36,
+    "start_date": "2026-05-04",
+    "end_date": "2026-05-20",
+    "incompatible_policy_ids": [
+      "HOPE_SAVINGS_I_2026"
+    ],
+    "source_url": "https://www.bokjiro.go.kr/ssis-tbu/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00000060",
+    "effective_date": "2026-05-04",
+    "checked_at": "2026-09-02T15:30:00+09:00",
+    "updated_at": "2026-09-02T15:30:00+09:00",
+    "application_status": "CLOSED",
+    "application_period_text": "2026년 신규 모집 5월 4일~5월 20일 종료. 다음 모집은 운영기관 공고 확인이 필요합니다."
   }
 ]

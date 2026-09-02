@@ -1,4 +1,4 @@
-# FinPath Current Status — 2026-08-30
+# FinPath Current Status — 2026-09-02
 
 ## Engine
 
@@ -11,7 +11,7 @@
 
 ## Production Policy Freeze
 
-- 13 production variants across 8 official 2026 programs.
+- 15 production variants across 10 official 2026 programs.
 - Complex conditions are preserved as explicit user confirmations instead of guessed numeric conversions.
 - Application status is separated from qualification status.
 - CLOSED/CHECK_REQUIRED policies cannot enter the optimized path.
@@ -20,7 +20,13 @@
 
 ## Regression
 
-Backend suite after Acceptance QA: `31 passed`.
+Backend suite after practicality/optimizer QA: `33 passed`.
+
+
+Practicality regression:
+- Hope Savings Account I eligible profile, 500,000 KRW/month total budget: optimizer assigns only 100,000 KRW/month to the matched account and leaves 400,000 KRW/month to general savings.
+- 9-year baseline 67,616,513 KRW -> optimized 80,176,135 KRW, additional assets +12,559,622 KRW.
+- Government support 10,800,000 KRW; policy interest itself is conservatively modeled at 0% because a single verified product rate is not assumed.
 
 Production dataset HTTP/demo regression:
 - DEMO_A: Baseline 141,647,723 < Target 144,000,000 <= Optimized 145,122,965 — ACHIEVED

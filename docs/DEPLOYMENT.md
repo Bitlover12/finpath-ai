@@ -8,7 +8,7 @@
 .\predeploy_check.ps1
 ```
 
-Backend `31 passed`, Frontend `npm run build` PASS 후 배포한다.
+Backend `33 passed`, Frontend `npm run build` PASS 후 배포한다.
 
 ## 1. Backend — Railway
 

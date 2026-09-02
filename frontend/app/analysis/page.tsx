@@ -18,12 +18,16 @@ type QuickQuestion = {
 
 const isOptimizableStatus = (status: string) => status === "OPEN" || status === "UPCOMING";
 
+function isPreviewAssumable(check: EligibilityCheck): boolean {
+  return check.required?.preview_assumable !== false;
+}
+
 function collectAllOptimizableMissingKeys(result: AnalyzeResponse): string[] {
   const keys = new Set<string>();
   for (const policy of result.policy_analysis) {
     if (policy.status !== "NEEDS_MORE_INFORMATION" || !isOptimizableStatus(policy.application_status)) continue;
     for (const check of policy.checks) {
-      if (check.field !== "manual_requirement" || check.result != null) continue;
+      if (check.field !== "manual_requirement" || check.result != null || !isPreviewAssumable(check)) continue;
       const key = String(check.required?.confirmation_key || "");
       if (key) keys.add(key);
     }
@@ -31,7 +35,41 @@ function collectAllOptimizableMissingKeys(result: AnalyzeResponse): string[] {
   return [...keys];
 }
 
+function questionFromCheck(policyName: string, check: EligibilityCheck): QuickQuestion | null {
+  const key = String(check.required?.confirmation_key || "");
+  if (!key) return null;
+  return {
+    keys: [key],
+    label: String(check.required?.label || "추가 자격요건"),
+    description: String(check.required?.description || "공식 공고의 추가 요건을 확인해주세요."),
+    policyNames: [policyName],
+  };
+}
+
 function collectPriorityQuestions(result: AnalyzeResponse, preview: AnalyzeResponse | null): QuickQuestion[] {
+  const questions: QuickQuestion[] = [];
+  const seenLabels = new Set<string>();
+
+  // Hard screening facts (benefit-recipient status, recognized-income tests, etc.)
+  // must never be silently assumed for a flashy preview. Ask only the first
+  // unresolved hard fact per currently-open policy; if the answer is "아니오",
+  // known-failure precedence removes the policy without asking irrelevant follow-ups.
+  for (const policy of result.policy_analysis) {
+    if (policy.status !== "NEEDS_MORE_INFORMATION" || policy.application_status !== "OPEN") continue;
+    const firstHard = policy.checks.find((check) =>
+      check.field === "manual_requirement" && check.result == null && !isPreviewAssumable(check)
+    );
+    if (!firstHard) continue;
+    const q = questionFromCheck(policy.policy_name, firstHard);
+    if (q && !seenLabels.has(q.label)) {
+      questions.push(q);
+      seenLabels.add(q.label);
+    }
+  }
+
+  // For ordinary policy conditions that are safe to use only as an explicitly
+  // labelled conditional preview, ask the requirements belonging to policies
+  // that would actually be selected in that preview path.
   const selectedIds = new Set((preview?.policy_analysis || []).filter((p) => p.selected_in_optimal_path).map((p) => p.policy_id));
   const targetPolicies = result.policy_analysis.filter((p) =>
     p.status === "NEEDS_MORE_INFORMATION" &&
@@ -42,7 +80,11 @@ function collectPriorityQuestions(result: AnalyzeResponse, preview: AnalyzeRespo
   const semanticLabels = new Set<string>();
   for (const policy of targetPolicies) {
     for (const check of policy.checks) {
-      if (check.field === "manual_requirement" && check.result == null) semanticLabels.add(String(check.required?.label || "추가 자격요건"));
+      if (
+        check.field === "manual_requirement" &&
+        check.result == null &&
+        isPreviewAssumable(check)
+      ) semanticLabels.add(String(check.required?.label || "추가 자격요건"));
     }
   }
 
@@ -50,9 +92,9 @@ function collectPriorityQuestions(result: AnalyzeResponse, preview: AnalyzeRespo
   for (const policy of result.policy_analysis) {
     if (policy.status !== "NEEDS_MORE_INFORMATION" || !isOptimizableStatus(policy.application_status)) continue;
     for (const check of policy.checks) {
-      if (check.field !== "manual_requirement" || check.result != null) continue;
+      if (check.field !== "manual_requirement" || check.result != null || !isPreviewAssumable(check)) continue;
       const label = String(check.required?.label || "추가 자격요건");
-      if (!semanticLabels.has(label)) continue;
+      if (!semanticLabels.has(label) || seenLabels.has(label)) continue;
       const key = String(check.required?.confirmation_key || "");
       if (!key) continue;
       const description = String(check.required?.description || "공식 공고의 추가 요건을 확인해주세요.");
@@ -65,7 +107,8 @@ function collectPriorityQuestions(result: AnalyzeResponse, preview: AnalyzeRespo
       }
     }
   }
-  return [...map.values()];
+  questions.push(...map.values());
+  return questions;
 }
 
 export default function AnalysisPage() {

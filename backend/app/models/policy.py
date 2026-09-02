@@ -19,6 +19,9 @@ class ManualRequirement(BaseModel):
     label: str = Field(min_length=1)
     description: str = Field(min_length=1)
     source_url: HttpUrl | None = None
+    # False for hard screening facts that must never be silently assumed in a
+    # conditional preview (e.g. current benefit-recipient status).
+    preview_assumable: bool = True
 
 
 class IncomeCondition(BaseModel):
@@ -46,7 +49,7 @@ class GovernmentContributionTier(BaseModel):
 
     income_basis: IncomeBasis
     max_income: int | None = Field(default=None, ge=0)
-    rate: float = Field(ge=0, le=1)
+    rate: float = Field(ge=0, le=10)
     monthly_contribution_cap: int = Field(gt=0)
     monthly_government_cap: int | None = Field(default=None, ge=0)
 
@@ -78,7 +81,7 @@ class Policy(BaseModel):
     government_support_timing: GovernmentSupportTiming
     government_support_interest_bearing: bool
 
-    interest_rate: float = Field(ge=0, le=1)
+    interest_rate: float = Field(ge=0, le=10)
 
     tax_treatment: TaxTreatment
     tax_rate_override: float | None = Field(default=None, ge=0, le=1)

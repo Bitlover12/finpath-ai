@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import combinations
+from math import ceil
 
 from app.models.config import BaselineConfig
 from app.models.enums import ApplicationStatus, EligibilityStatus
@@ -28,6 +29,69 @@ def _allocation_key(allocations: dict[str, int]) -> tuple[tuple[str, int], ...]:
     return tuple(sorted((pid, amount) for pid, amount in allocations.items() if amount > 0))
 
 
+def _candidate_amounts(policy: Policy, monthly_budget: int) -> list[int]:
+    """Return financially meaningful contribution breakpoints for one policy.
+
+    The old optimizer always filled a policy to its maximum. That is wrong for
+    fixed/capped matching programs (for example, save 100k -> government 300k):
+    paying 500k into such a policy can waste 400k that would earn more in the
+    general-savings bucket without increasing the subsidy.
+
+    We therefore score the minimum, support-cap/tier breakpoints, policy maximum,
+    and the user's budget edge. This keeps search fast while covering the points
+    where marginal policy benefit changes.
+    """
+    if monthly_budget <= 0:
+        return []
+
+    minimum = policy.monthly_contribution_min or 1
+    upper = min(monthly_budget, policy.monthly_contribution_limit)
+    if upper < minimum:
+        return []
+
+    values: set[int] = {upper}
+    if policy.monthly_contribution_min is not None:
+        values.add(policy.monthly_contribution_min)
+
+    for tier in policy.government_contribution_tiers or []:
+        values.add(min(tier.monthly_contribution_cap, upper))
+        if tier.rate > 0 and tier.monthly_government_cap is not None:
+            # First whole-won contribution at which the government cap is reached.
+            saturation = ceil(tier.monthly_government_cap / tier.rate)
+            values.add(min(saturation, tier.monthly_contribution_cap, upper))
+
+    return sorted(v for v in values if minimum <= v <= upper)
+
+
+def _score_amount(
+    *,
+    profile: UserProfile,
+    policy: Policy,
+    amount: int,
+    policies_by_id: dict[str, Policy],
+    horizon_months: int,
+    baseline: BaselineConfig,
+) -> tuple[int, float]:
+    """Return incremental assets and incremental-benefit-per-won for an amount."""
+    general_sim = simulate_general_saving(
+        initial_assets=profile.current_assets,
+        monthly_saving=amount,
+        horizon_months=horizon_months,
+        baseline=baseline,
+    )
+    policy_only_profile = profile.model_copy(update={"monthly_saving_capacity": amount})
+    policy_isolated = simulate_allocations(
+        profile=policy_only_profile,
+        policies_by_id=policies_by_id,
+        allocations={policy.id: amount},
+        horizon_months=horizon_months,
+        baseline=baseline,
+    )
+    incremental = policy_isolated.final_assets - general_sim.final_assets
+    score = incremental / amount if amount else float("-inf")
+    return incremental, score
+
+
 def optimize(
     *,
     profile: UserProfile,
@@ -39,6 +103,7 @@ def optimize(
     policies_by_id = {p.id: p for p in policies}
     eligibility_by_id = {r.policy_id: r for r in eligibility}
     exclusions: list[OptimizationExclusion] = []
+    # policy_id -> (preferred monthly amount, incremental benefit, benefit score)
     metrics: dict[str, tuple[int, int, float]] = {}
     candidates: list[Policy] = []
 
@@ -61,11 +126,9 @@ def optimize(
                 OptimizationExclusion(policy_id=policy.id, reason="MATURITY_AFTER_TARGET_HORIZON")
             )
             continue
-        standalone = min(profile.monthly_saving_capacity, policy.monthly_contribution_limit)
-        if standalone <= 0 or (
-            policy.monthly_contribution_min is not None
-            and standalone < policy.monthly_contribution_min
-        ):
+
+        amounts = _candidate_amounts(policy, profile.monthly_saving_capacity)
+        if not amounts:
             exclusions.append(
                 OptimizationExclusion(
                     policy_id=policy.id,
@@ -74,32 +137,25 @@ def optimize(
             )
             continue
 
-        policy_sim = simulate_allocations(
-            profile=profile,
-            policies_by_id=policies_by_id,
-            allocations={policy.id: standalone},
-            horizon_months=horizon_months,
-            baseline=baseline,
+        scored: list[tuple[float, int, int]] = []  # score, incremental, amount
+        for amount in amounts:
+            incremental, score = _score_amount(
+                profile=profile,
+                policy=policy,
+                amount=amount,
+                policies_by_id=policies_by_id,
+                horizon_months=horizon_months,
+                baseline=baseline,
+            )
+            scored.append((score, incremental, amount))
+
+        # Rank by marginal efficiency first; if tied, prefer the larger absolute
+        # benefit. This makes fixed-match policies stop at their subsidy cap while
+        # proportional policies naturally use their useful maximum.
+        best_score, best_incremental, preferred_amount = max(
+            scored, key=lambda item: (item[0], item[1], item[2])
         )
-        # Same initial assets and same standalone monthly budget, with all remaining monthly capacity removed
-        # so the comparison isolates the policy-vs-general decision for the same cash flow.
-        general_sim = simulate_general_saving(
-            initial_assets=profile.current_assets,
-            monthly_saving=standalone,
-            horizon_months=horizon_months,
-            baseline=baseline,
-        )
-        policy_only_profile = profile.model_copy(update={"monthly_saving_capacity": standalone})
-        policy_isolated = simulate_allocations(
-            profile=policy_only_profile,
-            policies_by_id=policies_by_id,
-            allocations={policy.id: standalone},
-            horizon_months=horizon_months,
-            baseline=baseline,
-        )
-        incremental = policy_isolated.final_assets - general_sim.final_assets
-        score = incremental / standalone if standalone else float("-inf")
-        metrics[policy.id] = (standalone, incremental, score)
+        metrics[policy.id] = (preferred_amount, best_incremental, best_score)
         candidates.append(policy)
 
     candidates.sort(key=lambda p: (metrics[p.id][2], metrics[p.id][1], p.id), reverse=True)
@@ -125,7 +181,8 @@ def optimize(
             for policy in ordered:
                 if remaining <= 0:
                     break
-                amount = min(remaining, policy.monthly_contribution_limit)
+                preferred = metrics[policy.id][0]
+                amount = min(remaining, preferred)
                 if policy.monthly_contribution_min is not None and amount < policy.monthly_contribution_min:
                     continue
                 if amount > 0:

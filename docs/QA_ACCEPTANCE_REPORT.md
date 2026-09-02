@@ -1,10 +1,10 @@
-# FinPath Production Acceptance QA — 2026-08-30
+# FinPath Production Acceptance QA — updated 2026-09-02
 
 ## Result
 
 **Backend / financial engine acceptance: PASS**
 
-- Automated tests: **31 passed**
+- Automated tests: **33 passed**
 - Randomized invariant profiles: **300 passed**
 - Real HTTP smoke: `/health`, `/api/demo/A`, `/api/demo/B`, `/api/demo/C`: PASS
 - CORS preflight for `http://localhost:3000`: PASS
@@ -64,6 +64,21 @@ Boundary verification:
 - Scenario application reruns the deterministic analysis pipeline.
 - Invalid scenario value types are rejected before financial calculation.
 - API validation errors follow the common `{ "error": ... }` contract.
+- Fixed/capped government matching policies are scored at contribution breakpoints instead of blindly filling the account maximum.
+- Hard screening facts such as benefit-recipient status are never auto-assumed in the conditional frontend Preview.
+
+## Practicality regression — Hope Savings Account I
+
+For an eligible working livelihood/medical-benefit household that explicitly confirms all official/manual conditions:
+
+- Monthly saving budget: 500,000 KRW
+- Optimizer policy allocation: **100,000 KRW** to Hope Savings Account I + **400,000 KRW** to general savings
+- Government support: **10,800,000 KRW** over 36 months
+- 9-year Baseline: **67,616,513 KRW**
+- 9-year FinPath: **80,176,135 KRW**
+- Additional assets: **+12,559,622 KRW**
+
+The policy account interest rate is modeled as 0% for this regression; the effect is therefore not inflated by an assumed bank rate. Full government-support payout remains conditional on the official payout requirements.
 
 ## Bugs found and fixed during acceptance QA
 

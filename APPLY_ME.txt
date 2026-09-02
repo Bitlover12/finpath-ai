@@ -1,0 +1,16 @@
+FinPath UX V2 patch
+
+목표:
+- 정보 입력 후 일반저축 vs FinPath 차이를 먼저 노출
+- NEEDS_MORE_INFORMATION 상태에서 0원 효과로 오해하지 않도록 조건부 Preview 제공
+- 최적경로에 실제 영향을 주는 모집 가능/예정 정책의 핵심 추가조건만 동적으로 질문
+- Dashboard 순서: 추가자산 Hero -> 월 배분 -> 효과 분해 -> 자산 추이 -> 목표/역산 -> 로드맵 -> 계산 가정
+- 개발자 enum을 사용자 한글 문구로 치환
+
+적용:
+1) 이 ZIP의 frontend 폴더를 현재 finpath_mvp 프로젝트 루트에 덮어쓰기
+2) frontend에서 npm run build
+3) 프로젝트 루트에서 git add frontend && git commit && git push
+
+주의:
+- Railway UI 설정/railway.toml/환경변수는 건드리지 않는 패치입니다.

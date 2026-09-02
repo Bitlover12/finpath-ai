@@ -31,10 +31,10 @@ def confirmations_for(policy):
     return {f"{policy.id}:{r.id}": True for r in policy.manual_requirements}
 
 
-def test_production_dataset_has_13_officially_sourced_variants():
+def test_production_dataset_has_15_officially_sourced_variants():
     policies = load_policies("production")
-    assert len(policies) == 13
-    assert len({p.id for p in policies}) == 13
+    assert len(policies) == 15
+    assert len({p.id for p in policies}) == 15
     assert all(not p.id.startswith("TEST_") for p in policies)
     assert all("example.com" not in str(p.source_url) for p in policies)
 

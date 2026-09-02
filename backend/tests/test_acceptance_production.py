@@ -10,7 +10,7 @@ def test_production_demo_end_to_end_invariants(monkeypatch):
     policies = client.get("/api/policies")
     assert policies.status_code == 200
     policy_rows = policies.json()
-    assert len(policy_rows) == 13
+    assert len(policy_rows) == 15
     assert all(not row["id"].startswith("TEST_") for row in policy_rows)
 
     for demo_id in ("A", "B", "C"):

@@ -158,6 +158,7 @@ def evaluate_policy(profile: UserProfile, policy: Policy, *, as_of: date | None 
             "label": requirement.label,
             "description": requirement.description,
             "confirmation_key": confirmation_key,
+            "preview_assumable": requirement.preview_assumable,
         }
         if actual is None:
             missing_fields.append(f"manual_confirmations.{confirmation_key}")
