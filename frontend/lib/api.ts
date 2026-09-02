@@ -1,4 +1,4 @@
-import type { AnalyzeResponse, CardCatalogItem, CardTypePreference, ScenarioChange, SpendingCategory, SpendingOptimizationResponse, SpendingUploadResponse, UserProfile } from "./types";
+import type { AnalyzeResponse, CardCatalogItem, CardTypePreference, EligibilityResponse, PolicyCatalogItem, ScenarioChange, SpendingCategory, SpendingOptimizationResponse, SpendingUploadResponse, UserProfile } from "./types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000";
 
@@ -18,6 +18,18 @@ export function analyze(profile: UserProfile) {
   return request<AnalyzeResponse>("/api/analyze", {
     method: "POST",
     body: JSON.stringify({ profile }),
+  });
+}
+
+
+export function getPolicies() {
+  return request<PolicyCatalogItem[]>("/api/policies");
+}
+
+export function checkEligibility(profile: UserProfile, policyIds?: string[]) {
+  return request<EligibilityResponse>("/api/eligibility", {
+    method: "POST",
+    body: JSON.stringify({ profile, policy_ids: policyIds || null }),
   });
 }
 

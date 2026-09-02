@@ -171,3 +171,46 @@ export type SpendingUploadResponse = {
   total_rows: number;
   notice: string;
 };
+
+
+export type PolicyCatalogItem = {
+  id: string;
+  name: string;
+  description: string;
+  min_age: number | null;
+  max_age: number | null;
+  income_conditions: { basis: "PERSONAL" | "HOUSEHOLD"; min_income: number | null; max_income: number | null }[];
+  manual_requirements: { id: string; label: string; description: string; source_url?: string | null; preview_assumable?: boolean }[];
+  allowed_regions: string[] | null;
+  allowed_company_sizes: string[] | null;
+  allowed_employment_types: string[] | null;
+  min_employment_months: number | null;
+  max_employment_months: number | null;
+  monthly_contribution_min: number | null;
+  monthly_contribution_limit: number;
+  government_contribution_tiers: { income_basis: "PERSONAL" | "HOUSEHOLD"; max_income: number | null; rate: number; monthly_contribution_cap: number; monthly_government_cap: number | null }[] | null;
+  government_support_timing: string;
+  government_support_interest_bearing: boolean;
+  interest_rate: number;
+  tax_treatment: "TAXABLE" | "TAX_FREE" | "REDUCED";
+  tax_rate_override: number | null;
+  duration_months: number;
+  start_date: string | null;
+  end_date: string | null;
+  incompatible_policy_ids: string[];
+  source_url: string;
+  effective_date: string;
+  checked_at: string;
+  updated_at: string;
+  application_status: "OPEN" | "UPCOMING" | "CLOSED" | "CHECK_REQUIRED";
+  application_period_text?: string | null;
+};
+
+export type EligibilityResult = {
+  policy_id: string;
+  status: "ELIGIBLE" | "INELIGIBLE" | "NEEDS_MORE_INFORMATION";
+  checks: EligibilityCheck[];
+  missing_fields: string[];
+};
+
+export type EligibilityResponse = { results: EligibilityResult[] };
