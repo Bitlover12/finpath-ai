@@ -214,3 +214,93 @@ export type EligibilityResult = {
 };
 
 export type EligibilityResponse = { results: EligibilityResult[] };
+
+export type OpportunityItem = {
+  kind: "NOW_AVAILABLE" | "VERIFY_REQUIRED" | "UPCOMING" | "DEADLINE" | string;
+  policy_id: string;
+  policy_name: string;
+  source_url: string;
+  application_status: "OPEN" | "UPCOMING" | "CLOSED" | "CHECK_REQUIRED";
+  eligibility_status: "ELIGIBLE" | "INELIGIBLE" | "NEEDS_MORE_INFORMATION";
+  headline: string;
+  detail: string;
+  estimated_financial_effect: number | null;
+  deadline_days: number | null;
+};
+
+export type PolicyCliffEvent = {
+  id: string;
+  field: string;
+  direction: "GAIN" | "LOSS" | "MIXED" | string;
+  current_value: unknown;
+  threshold_value: unknown;
+  trigger_value: unknown;
+  distance_value: number;
+  distance_unit: "KRW" | "MONTHS" | "YEARS" | "AGE_STEPS" | string;
+  headline: string;
+  detail: string;
+  affected_policies: {
+    policy_id: string;
+    policy_name: string;
+    source_url: string;
+    before_status: "ELIGIBLE" | "INELIGIBLE" | "NEEDS_MORE_INFORMATION";
+    after_status: "ELIGIBLE" | "INELIGIBLE" | "NEEDS_MORE_INFORMATION";
+    transition: "GAIN" | "LOSS" | string;
+  }[];
+  final_assets_delta: number;
+  government_support_delta: number;
+  confidence: "CONFIRMED" | "CONDITIONAL" | string;
+};
+
+export type ActionPlanItem = {
+  priority: "NOW" | "SOON" | "WATCH" | "GOAL" | string;
+  action_type: string;
+  title: string;
+  detail: string;
+  policy_id: string | null;
+  source_url: string | null;
+};
+
+export type OpportunityRadarResponse = {
+  profile: UserProfile;
+  generated_date: string;
+  now_available: OpportunityItem[];
+  verify_required: OpportunityItem[];
+  upcoming: OpportunityItem[];
+  deadline_alerts: OpportunityItem[];
+  cliffs: PolicyCliffEvent[];
+  sensitivities: {
+    field: string;
+    headline: string;
+    detail: string;
+    affected_policy_ids: string[];
+  }[];
+  action_plan: ActionPlanItem[];
+  notice: string;
+};
+
+export type ScenarioCompareResponse = {
+  before: AnalyzeResponse;
+  after: AnalyzeResponse;
+  applied_changes: { field: string; before_value: unknown; after_value: unknown }[];
+  policy_changes: {
+    policy_id: string;
+    policy_name: string;
+    source_url: string;
+    before_status: "ELIGIBLE" | "INELIGIBLE" | "NEEDS_MORE_INFORMATION";
+    after_status: "ELIGIBLE" | "INELIGIBLE" | "NEEDS_MORE_INFORMATION";
+    before_selected: boolean;
+    after_selected: boolean;
+    before_monthly_amount: number;
+    after_monthly_amount: number;
+    change_type: "GAINED_OPPORTUNITY" | "LOST_OPPORTUNITY" | "PATH_CHANGED" | "ALLOCATION_CHANGED" | "ELIGIBILITY_CHANGED" | string;
+  }[];
+  final_assets_delta: number;
+  government_support_delta: number;
+  tax_benefit_delta: number;
+  goal_before: "ACHIEVED" | "SHORTFALL";
+  goal_after: "ACHIEVED" | "SHORTFALL";
+  shortfall_delta: number;
+  headline: string;
+  explanation: string;
+};

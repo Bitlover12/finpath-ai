@@ -156,3 +156,11 @@ See `docs/PRODUCTION_POLICY_FREEZE.md` and `docs/FINAL_STATUS.md`.
 ## 소비·카드 최적화 MVP
 
 소비·카드 최적화는 기본 FinPath 금융분석이 끝난 뒤 선택하는 부가서비스입니다. `/spending`에서 CSV/XLSX 또는 월 소비 입력 → 대표 체크/신용카드 순혜택 비교 → 선택소비 절감 시나리오 → 늘어난 월 저축여력으로 금융경로를 재계산하고, 마지막에 **일반저축 vs 기본 FinPath vs Full FinPath** 3개 경로를 동시에 비교합니다. 상세 범위와 공식 출처는 `docs/SPENDING_CARD_MVP.md`를 참고하세요.
+
+## Financial Digital Twin (V5)
+FinPath now exposes three product-level capabilities on top of the frozen deterministic finance engine:
+1. Financial Opportunity Radar (`POST /api/opportunity-radar`)
+2. Policy Cliff BEFORE/AFTER Simulator (`POST /api/scenario/compare`)
+3. Grounded Action Plan generated from eligibility, application state, optimizer and goal-seeking results
+
+The optional spending/card booster remains after the core FinPath flow.

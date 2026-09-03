@@ -386,6 +386,82 @@
         }
       }
     },
+    "/api/opportunity-radar": {
+      "post": {
+        "summary": "Opportunity Radar",
+        "operationId": "opportunity_radar_api_opportunity_radar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpportunityRadarResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scenario/compare": {
+      "post": {
+        "summary": "Scenario Compare",
+        "operationId": "scenario_compare_api_scenario_compare_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioApplyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioCompareResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/scenario/apply": {
       "post": {
         "summary": "Scenario Apply",
@@ -466,6 +542,60 @@
   },
   "components": {
     "schemas": {
+      "ActionPlanItem": {
+        "properties": {
+          "priority": {
+            "type": "string",
+            "title": "Priority"
+          },
+          "action_type": {
+            "type": "string",
+            "title": "Action Type"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "policy_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2083,
+                "minLength": 1,
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "priority",
+          "action_type",
+          "title",
+          "detail"
+        ],
+        "title": "ActionPlanItem"
+      },
       "AnalyzeRequest": {
         "properties": {
           "profile": {
@@ -554,6 +684,27 @@
           "CHECK_REQUIRED"
         ],
         "title": "ApplicationStatus"
+      },
+      "AppliedScenarioChange": {
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/ScenarioField"
+          },
+          "before_value": {
+            "title": "Before Value"
+          },
+          "after_value": {
+            "title": "After Value"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "field",
+          "before_value",
+          "after_value"
+        ],
+        "title": "AppliedScenarioChange"
       },
       "AssetPoint": {
         "properties": {
@@ -807,6 +958,46 @@
           "CREDIT"
         ],
         "title": "CardTypePreference"
+      },
+      "CliffPolicyTransition": {
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "title": "Policy Id"
+          },
+          "policy_name": {
+            "type": "string",
+            "title": "Policy Name"
+          },
+          "source_url": {
+            "type": "string",
+            "maxLength": 2083,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Source Url"
+          },
+          "before_status": {
+            "$ref": "#/components/schemas/EligibilityStatus"
+          },
+          "after_status": {
+            "$ref": "#/components/schemas/EligibilityStatus"
+          },
+          "transition": {
+            "type": "string",
+            "title": "Transition"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_id",
+          "policy_name",
+          "source_url",
+          "before_status",
+          "after_status",
+          "transition"
+        ],
+        "title": "CliffPolicyTransition"
       },
       "CompanySize": {
         "type": "string",
@@ -1092,6 +1283,152 @@
         ],
         "title": "IncomeBasis"
       },
+      "OpportunityItem": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "policy_id": {
+            "type": "string",
+            "title": "Policy Id"
+          },
+          "policy_name": {
+            "type": "string",
+            "title": "Policy Name"
+          },
+          "source_url": {
+            "type": "string",
+            "maxLength": 2083,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Source Url"
+          },
+          "application_status": {
+            "$ref": "#/components/schemas/ApplicationStatus"
+          },
+          "eligibility_status": {
+            "$ref": "#/components/schemas/EligibilityStatus"
+          },
+          "headline": {
+            "type": "string",
+            "title": "Headline"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "estimated_financial_effect": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Financial Effect"
+          },
+          "deadline_days": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline Days"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "policy_id",
+          "policy_name",
+          "source_url",
+          "application_status",
+          "eligibility_status",
+          "headline",
+          "detail"
+        ],
+        "title": "OpportunityItem"
+      },
+      "OpportunityRadarResponse": {
+        "properties": {
+          "profile": {
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "generated_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Generated Date"
+          },
+          "now_available": {
+            "items": {
+              "$ref": "#/components/schemas/OpportunityItem"
+            },
+            "type": "array",
+            "title": "Now Available"
+          },
+          "verify_required": {
+            "items": {
+              "$ref": "#/components/schemas/OpportunityItem"
+            },
+            "type": "array",
+            "title": "Verify Required"
+          },
+          "upcoming": {
+            "items": {
+              "$ref": "#/components/schemas/OpportunityItem"
+            },
+            "type": "array",
+            "title": "Upcoming"
+          },
+          "deadline_alerts": {
+            "items": {
+              "$ref": "#/components/schemas/OpportunityItem"
+            },
+            "type": "array",
+            "title": "Deadline Alerts"
+          },
+          "cliffs": {
+            "items": {
+              "$ref": "#/components/schemas/PolicyCliffEvent"
+            },
+            "type": "array",
+            "title": "Cliffs"
+          },
+          "sensitivities": {
+            "items": {
+              "$ref": "#/components/schemas/SensitivityAlert"
+            },
+            "type": "array",
+            "title": "Sensitivities"
+          },
+          "action_plan": {
+            "items": {
+              "$ref": "#/components/schemas/ActionPlanItem"
+            },
+            "type": "array",
+            "title": "Action Plan"
+          },
+          "notice": {
+            "type": "string",
+            "title": "Notice"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "profile",
+          "generated_date",
+          "notice"
+        ],
+        "title": "OpportunityRadarResponse"
+      },
       "OptimizationExclusion": {
         "properties": {
           "policy_id": {
@@ -1280,6 +1617,83 @@
         ],
         "title": "PolicyAnalysis"
       },
+      "PolicyCliffEvent": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "field": {
+            "$ref": "#/components/schemas/ScenarioField"
+          },
+          "direction": {
+            "type": "string",
+            "title": "Direction"
+          },
+          "current_value": {
+            "title": "Current Value"
+          },
+          "threshold_value": {
+            "title": "Threshold Value"
+          },
+          "trigger_value": {
+            "title": "Trigger Value"
+          },
+          "distance_value": {
+            "type": "integer",
+            "title": "Distance Value"
+          },
+          "distance_unit": {
+            "type": "string",
+            "title": "Distance Unit"
+          },
+          "headline": {
+            "type": "string",
+            "title": "Headline"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "affected_policies": {
+            "items": {
+              "$ref": "#/components/schemas/CliffPolicyTransition"
+            },
+            "type": "array",
+            "title": "Affected Policies"
+          },
+          "final_assets_delta": {
+            "type": "integer",
+            "title": "Final Assets Delta"
+          },
+          "government_support_delta": {
+            "type": "integer",
+            "title": "Government Support Delta"
+          },
+          "confidence": {
+            "type": "string",
+            "title": "Confidence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "field",
+          "direction",
+          "current_value",
+          "threshold_value",
+          "trigger_value",
+          "distance_value",
+          "distance_unit",
+          "headline",
+          "detail",
+          "final_assets_delta",
+          "government_support_delta",
+          "confidence"
+        ],
+        "title": "PolicyCliffEvent"
+      },
       "PolicyEffect": {
         "properties": {
           "additional_assets": {
@@ -1427,6 +1841,75 @@
         ],
         "title": "ScenarioChange"
       },
+      "ScenarioCompareResponse": {
+        "properties": {
+          "before": {
+            "$ref": "#/components/schemas/AnalyzeResponse"
+          },
+          "after": {
+            "$ref": "#/components/schemas/AnalyzeResponse"
+          },
+          "applied_changes": {
+            "items": {
+              "$ref": "#/components/schemas/AppliedScenarioChange"
+            },
+            "type": "array",
+            "title": "Applied Changes"
+          },
+          "policy_changes": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioPolicyChange"
+            },
+            "type": "array",
+            "title": "Policy Changes"
+          },
+          "final_assets_delta": {
+            "type": "integer",
+            "title": "Final Assets Delta"
+          },
+          "government_support_delta": {
+            "type": "integer",
+            "title": "Government Support Delta"
+          },
+          "tax_benefit_delta": {
+            "type": "integer",
+            "title": "Tax Benefit Delta"
+          },
+          "goal_before": {
+            "$ref": "#/components/schemas/GoalStatus"
+          },
+          "goal_after": {
+            "$ref": "#/components/schemas/GoalStatus"
+          },
+          "shortfall_delta": {
+            "type": "integer",
+            "title": "Shortfall Delta"
+          },
+          "headline": {
+            "type": "string",
+            "title": "Headline"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "before",
+          "after",
+          "final_assets_delta",
+          "government_support_delta",
+          "tax_benefit_delta",
+          "goal_before",
+          "goal_after",
+          "shortfall_delta",
+          "headline",
+          "explanation"
+        ],
+        "title": "ScenarioCompareResponse"
+      },
       "ScenarioField": {
         "type": "string",
         "enum": [
@@ -1489,6 +1972,98 @@
           "changes"
         ],
         "title": "ScenarioParseResponse"
+      },
+      "ScenarioPolicyChange": {
+        "properties": {
+          "policy_id": {
+            "type": "string",
+            "title": "Policy Id"
+          },
+          "policy_name": {
+            "type": "string",
+            "title": "Policy Name"
+          },
+          "source_url": {
+            "type": "string",
+            "maxLength": 2083,
+            "minLength": 1,
+            "format": "uri",
+            "title": "Source Url"
+          },
+          "before_status": {
+            "$ref": "#/components/schemas/EligibilityStatus"
+          },
+          "after_status": {
+            "$ref": "#/components/schemas/EligibilityStatus"
+          },
+          "before_selected": {
+            "type": "boolean",
+            "title": "Before Selected"
+          },
+          "after_selected": {
+            "type": "boolean",
+            "title": "After Selected"
+          },
+          "before_monthly_amount": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Before Monthly Amount"
+          },
+          "after_monthly_amount": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "After Monthly Amount"
+          },
+          "change_type": {
+            "type": "string",
+            "title": "Change Type"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_id",
+          "policy_name",
+          "source_url",
+          "before_status",
+          "after_status",
+          "before_selected",
+          "after_selected",
+          "before_monthly_amount",
+          "after_monthly_amount",
+          "change_type"
+        ],
+        "title": "ScenarioPolicyChange"
+      },
+      "SensitivityAlert": {
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/ScenarioField"
+          },
+          "headline": {
+            "type": "string",
+            "title": "Headline"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "affected_policy_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Policy Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "field",
+          "headline",
+          "detail"
+        ],
+        "title": "SensitivityAlert"
       },
       "SimulationRequest": {
         "properties": {

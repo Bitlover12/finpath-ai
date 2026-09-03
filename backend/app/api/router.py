@@ -19,6 +19,7 @@ from app.models.contracts import (
 )
 from app.models.enums import CompanySize, EmploymentType
 from app.models.profile import UserProfile
+from app.models.digital_twin import OpportunityRadarResponse, ScenarioCompareResponse
 from app.models.results import AnalyzeResponse
 from app.models.spending import SpendingOptimizationResponse, SpendingRecommendationRequest, SpendingUploadResponse
 from app.services.analyze import analyze_profile
@@ -28,6 +29,7 @@ from app.services.goal import goal_seeking
 from app.services.optimizer import optimize
 from app.services.scenario import parse_scenario
 from app.services.spending import load_card_catalog, optimize_spending, parse_spending_file
+from app.services.digital_twin import build_opportunity_radar, compare_scenario
 
 router = APIRouter(prefix="/api")
 
@@ -156,6 +158,16 @@ def _apply_change(data: dict[str, Any], field: str, value: Any) -> None:
         data[field] = int(data.get(field, 0)) + int(value.get("amount", 0))
     else:
         data[field] = value
+
+
+@router.post("/opportunity-radar", response_model=OpportunityRadarResponse)
+def opportunity_radar(request: AnalyzeRequest) -> OpportunityRadarResponse:
+    return build_opportunity_radar(request.profile, _policies())
+
+
+@router.post("/scenario/compare", response_model=ScenarioCompareResponse)
+def scenario_compare(request: ScenarioApplyRequest) -> ScenarioCompareResponse:
+    return compare_scenario(request.profile, request.changes, _policies())
 
 
 @router.post("/scenario/apply", response_model=AnalyzeResponse)

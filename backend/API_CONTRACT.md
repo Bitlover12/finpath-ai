@@ -49,3 +49,33 @@ Response includes the discretionary-spend adjustment scenario, TOP 3 cards that 
 
 ### POST `/api/spending/upload`
 Multipart form field `file`; CSV/XLSX/XLSM up to 5 MB. Returns categorized transactions and monthly category averages. Uploaded bytes are processed in-memory and are not persisted by the API.
+
+## Financial Digital Twin APIs
+
+### POST `/api/opportunity-radar`
+Input: `{ "profile": UserProfile }`
+
+Returns a grounded opportunity radar built from the production policy dataset and deterministic eligibility/finance engine:
+- `now_available`: currently open + confirmed eligible policies
+- `verify_required`: policies blocked on unresolved manual/household conditions
+- `upcoming`: condition-eligible/conditional policies whose application status is upcoming
+- `deadline_alerts`: open policies with a known end date within the near-term window
+- `cliffs`: numeric eligibility boundaries (income/age/employment duration) where policy status changes, including recalculated long-term asset/support delta
+- `sensitivities`: categorical dimensions such as company size/region/employment type that can invalidate relevant policies
+- `action_plan`: grounded next actions only
+
+The radar never assumes non-assumable manual requirements and never fabricates a recruitment date.
+
+### POST `/api/scenario/compare`
+Input: `{ "profile": UserProfile, "changes": ScenarioChange[] }`
+
+Runs the full deterministic engine twice (BEFORE / AFTER) and returns:
+- applied structured changes
+- gained/lost policy opportunities
+- selected-path/allocation changes
+- final asset delta
+- government-support delta
+- tax-benefit delta
+- goal-status/shortfall delta
+
+The natural-language parser may produce the `changes`, but the parser/LLM does not calculate money.

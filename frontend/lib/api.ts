@@ -1,4 +1,4 @@
-import type { AnalyzeResponse, CardCatalogItem, CardTypePreference, EligibilityResponse, PolicyCatalogItem, ScenarioChange, SpendingCategory, SpendingOptimizationResponse, SpendingUploadResponse, UserProfile } from "./types";
+import type { AnalyzeResponse, CardCatalogItem, CardTypePreference, EligibilityResponse, OpportunityRadarResponse, PolicyCatalogItem, ScenarioChange, ScenarioCompareResponse, SpendingCategory, SpendingOptimizationResponse, SpendingUploadResponse, UserProfile } from "./types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000";
 
@@ -41,6 +41,21 @@ export function parseScenario(text: string) {
   return request<{ changes: ScenarioChange[]; notice: string | null }>("/api/scenario/parse", {
     method: "POST",
     body: JSON.stringify({ text }),
+  });
+}
+
+
+export function getOpportunityRadar(profile: UserProfile) {
+  return request<OpportunityRadarResponse>("/api/opportunity-radar", {
+    method: "POST",
+    body: JSON.stringify({ profile }),
+  });
+}
+
+export function compareScenario(profile: UserProfile, changes: ScenarioChange[]) {
+  return request<ScenarioCompareResponse>("/api/scenario/compare", {
+    method: "POST",
+    body: JSON.stringify({ profile, changes }),
   });
 }
 

@@ -30,24 +30,47 @@ def fallback_parse(text: str) -> ScenarioParseResponse:
 
     if "대기업" in text:
         changes.append(ScenarioChange(field=ScenarioField.COMPANY_SIZE, value=CompanySize.LARGE.value))
+    elif "중견기업" in text:
+        changes.append(ScenarioChange(field=ScenarioField.COMPANY_SIZE, value=CompanySize.MID.value))
     elif "중소기업" in text:
         changes.append(ScenarioChange(field=ScenarioField.COMPANY_SIZE, value=CompanySize.SME.value))
+    elif "공공기관" in text or "공기업" in text:
+        changes.append(ScenarioChange(field=ScenarioField.COMPANY_SIZE, value=CompanySize.PUBLIC.value))
 
-    salary = re.search(r"(?:연봉|소득)[^\d]*(\d[\d,]*(?:\.\d+)?)\s*(억|천만|백만|만)?", text)
+    salary = re.search(r"(?:연봉|연소득|소득)[^\d]*(\d[\d,]*(?:\.\d+)?)\s*(억|천만|백만|만)?", text)
     if salary:
         number = float(salary.group(1).replace(",", ""))
         unit = salary.group(2)
         multiplier = {"억": 100_000_000, "천만": 10_000_000, "백만": 1_000_000, "만": 10_000, None: 10_000}[unit]
-        changes.append(ScenarioChange(field=ScenarioField.ANNUAL_INCOME, value=int(number * multiplier)))
+        income_value = int(number * multiplier)
+        if re.search(r"(?:초과|넘)", text[salary.end():]):
+            income_value += 1
+        changes.append(ScenarioChange(field=ScenarioField.ANNUAL_INCOME, value=income_value))
 
-    saving_plus = re.search(r"(?:저축|저축액)[^\d]*(?:\+|늘|증가)[^\d]*(\d[\d,]*)\s*만", text)
+    # "월 저축액을 20만원 늘리면", "저축 20만원 증가" 같이 숫자가 동사 앞에 오는 문장도 처리한다.
+    saving_plus = re.search(r"(?:월)?(?:저축|저축액|저축여력)[^\d]*(\d[\d,]*(?:\.\d+)?)\s*(만)?원?[^\n]*(?:늘|증가|추가)", text)
+    if not saving_plus:
+        saving_plus = re.search(r"(?:저축|저축액|저축여력)[^\n]*(?:\+|늘|증가|추가)[^\d]*(\d[\d,]*(?:\.\d+)?)\s*(만)?원?", text)
     if saving_plus:
+        amount = float(saving_plus.group(1).replace(",", ""))
+        multiplier = 10_000 if saving_plus.group(2) == "만" else 1
         changes.append(
             ScenarioChange(
                 field=ScenarioField.MONTHLY_SAVING_CAPACITY,
-                value={"operation": "ADD", "amount": int(saving_plus.group(1).replace(",", "")) * 10_000},
+                value={"operation": "ADD", "amount": int(amount * multiplier)},
             )
         )
+
+    employment_years = re.search(r"재직(?:기간)?[^\d]*(\d+)\s*년", text)
+    employment_months = re.search(r"재직(?:기간)?[^\d]*(\d+)\s*개월", text)
+    if employment_years:
+        changes.append(ScenarioChange(field=ScenarioField.EMPLOYMENT_MONTHS, value=int(employment_years.group(1)) * 12))
+    elif employment_months:
+        changes.append(ScenarioChange(field=ScenarioField.EMPLOYMENT_MONTHS, value=int(employment_months.group(1))))
+
+    age_match = re.search(r"(?:나이|만)[^\d]*(\d+)\s*세", text)
+    if age_match:
+        changes.append(ScenarioChange(field=ScenarioField.AGE, value=int(age_match.group(1))))
 
     if "경기도" in text or "경기" in lower:
         changes.append(ScenarioChange(field=ScenarioField.REGION, value="GYEONGGI"))
@@ -57,8 +80,33 @@ def fallback_parse(text: str) -> ScenarioParseResponse:
         changes.append(ScenarioChange(field=ScenarioField.REGION, value="BUSAN"))
     elif "인천" in text:
         changes.append(ScenarioChange(field=ScenarioField.REGION, value="INCHEON"))
+    elif "대전" in text:
+        changes.append(ScenarioChange(field=ScenarioField.REGION, value="DAEJEON"))
+    elif "전북" in text:
+        changes.append(ScenarioChange(field=ScenarioField.REGION, value="JEONBUK"))
+    elif "전남" in text:
+        changes.append(ScenarioChange(field=ScenarioField.REGION, value="JEONNAM"))
 
-    return ScenarioParseResponse(changes=changes, notice=NOTICE)
+    employment_map = [
+        (("프리랜서",), "FREELANCER"),
+        (("자영업", "사업자"), "SELF_EMPLOYED"),
+        (("퇴사", "무직"), "UNEMPLOYED"),
+    ]
+    for keywords, value in employment_map:
+        if any(k in text for k in keywords):
+            changes.append(ScenarioChange(field=ScenarioField.EMPLOYMENT_TYPE, value=value))
+            break
+
+    # Keep the first occurrence for each field so a single sentence cannot create
+    # conflicting duplicate changes through overlapping fallback patterns.
+    deduped: list[ScenarioChange] = []
+    seen: set[ScenarioField] = set()
+    for change in changes:
+        if change.field in seen:
+            continue
+        seen.add(change.field)
+        deduped.append(change)
+    return ScenarioParseResponse(changes=deduped, notice=NOTICE)
 
 
 def _extract_output_text(payload: dict[str, Any]) -> str | None:

@@ -31,12 +31,12 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-6xl px-5 pb-16 pt-20 sm:px-7 sm:pt-28">
         <div className="max-w-[780px]">
-          <p className="text-[15px] font-bold text-[#3182f6]">청년 자산형성 AI 금융 네비게이터</p>
+          <p className="text-[15px] font-bold text-[#3182f6]">AI 금융 디지털 트윈</p>
           <h1 className="mt-5 text-[44px] font-black leading-[1.12] tracking-[-0.055em] sm:text-[64px]">
-            같은 돈을 모아도,<br />가는 길은 달라질 수 있어요.
+            내 조건이 바뀌면,<br />금융기회도 달라져요.
           </h1>
           <p className="mt-7 max-w-[650px] text-[18px] leading-8 text-[#6b7684]">
-            내 조건에서 받을 수 있는 정책을 찾고, 매달 얼마를 어디에 넣을지 계산해서<br className="hidden sm:block" /> 목표까지 가장 현실적인 경로를 보여드려요.
+            지금 받을 수 있는 정책만 찾는 게 아니라, 연봉·이직·나이·재직기간이 바뀔 때<br className="hidden sm:block" /> 얻거나 잃는 금융혜택과 장기 자산 변화까지 미리 계산해요.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <Link href="/profile" className="fp-primary min-w-[180px]">내 경로 찾기</Link>
@@ -47,20 +47,20 @@ export default function HomePage() {
 
         <div className="mt-24 border-y border-[#edf0f3] py-8">
           <div className="grid gap-8 sm:grid-cols-3">
-            <div><p className="text-[13px] font-semibold text-[#8b95a1]">먼저</p><p className="mt-2 text-[18px] font-bold">내가 받을 수 있는 정책만 추려요</p></div>
-            <div><p className="text-[13px] font-semibold text-[#8b95a1]">그리고</p><p className="mt-2 text-[18px] font-bold">월 저축액을 가장 유리하게 나눠요</p></div>
-            <div><p className="text-[13px] font-semibold text-[#8b95a1]">마지막으로</p><p className="mt-2 text-[18px] font-bold">목표까지 부족한 조건을 역산해요</p></div>
+            <div><p className="text-[13px] font-semibold text-[#8b95a1]">먼저</p><p className="mt-2 text-[18px] font-bold">현재 금융기회와 놓칠 조건을 찾아요</p></div>
+            <div><p className="text-[13px] font-semibold text-[#8b95a1]">그리고</p><p className="mt-2 text-[18px] font-bold">정책 절벽 전후를 다시 계산해요</p></div>
+            <div><p className="text-[13px] font-semibold text-[#8b95a1]">마지막으로</p><p className="mt-2 text-[18px] font-bold">지금 해야 할 행동까지 정리해요</p></div>
           </div>
         </div>
 
         <section className="mt-24 max-w-[820px]">
           <p className="fp-label">FinPath가 다른 점</p>
-          <h2 className="mt-3 text-[32px] font-black tracking-[-0.04em] sm:text-[42px]">정책 목록이 아니라, 실행할 숫자를 드려요.</h2>
+          <h2 className="mt-3 text-[32px] font-black tracking-[-0.04em] sm:text-[42px]">현재뿐 아니라, 다음 금융결정까지 계산해요.</h2>
           <div className="mt-10 divide-y divide-[#edf0f3] border-y border-[#edf0f3]">
             {[
-              ["01", "가입 가능한지", "나이·소득·지역·직장 조건을 룰 엔진으로 확인해요."],
-              ["02", "얼마를 넣을지", "정책별 한도와 지원효과를 비교해 월 저축액을 배분해요."],
-              ["03", "그래서 얼마나 달라지는지", "일반저축과 같은 조건으로 비교하고 목표 미달 시 필요한 금액·기간까지 계산해요."],
+              ["01", "금융기회 레이더", "지금 가능한 정책과 곧 자격이 생기거나 사라질 조건을 함께 찾아요."],
+              ["02", "정책 절벽 시뮬레이터", "연봉·이직·지역 같은 변화 전후의 정책과 장기 자산을 같은 엔진으로 다시 계산해요."],
+              ["03", "Action Plan", "월 저축 배분, 신청 확인, 다음 재판정 시점까지 실제 행동으로 정리해요."],
             ].map(([n, title, desc]) => <div key={n} className="grid gap-2 py-6 sm:grid-cols-[52px_210px_1fr] sm:items-center"><span className="text-sm font-bold text-[#b0b8c1]">{n}</span><b className="text-[17px]">{title}</b><p className="text-[14px] leading-6 text-[#6b7684]">{desc}</p></div>)}
           </div>
         </section>

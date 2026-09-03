@@ -120,7 +120,7 @@ export default function ProfilePage() {
     <Shell>
       <div className="mx-auto max-w-5xl">
         <div className="max-w-2xl">
-          <p className="fp-label">1 · 내 조건</p>
+          <p className="fp-label">1 · 내 금융 트윈</p>
           <h1 className="fp-title mt-2">몇 가지만 알려주시면, 볼 필요 없는 정책부터 지울게요.</h1>
           <p className="fp-muted mt-3">입력하는 동안 오른쪽에서 정책 후보가 바로 좁혀집니다. 확실하지 않은 조건은 억지로 통과시키지 않아요.</p>
         </div>
