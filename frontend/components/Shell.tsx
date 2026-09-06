@@ -19,13 +19,13 @@ export function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-[#f7f9fb] text-[#191f28]">
       <header className="sticky top-0 z-30 border-b border-[#edf0f3] bg-white/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-7">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-7">
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-[20px] font-black tracking-[-0.04em] text-[#191f28]">
+            <Link href="/" className="text-heading font-extrabold tracking-[-0.04em] text-[#191f28]">
               FinPath<span className="text-[#3182f6]">.</span>
             </Link>
             <span className="hidden h-4 w-px bg-[#e5e8eb] sm:block" />
-            <span className="hidden text-sm font-semibold text-[#8b95a1] sm:block">{meta.label}</span>
+            <span className="hidden text-body font-bold text-[#8b95a1] sm:block">{meta.label}</span>
           </div>
           <div className="flex items-center gap-3">
             {meta.step && (
@@ -36,14 +36,14 @@ export function Shell({ children }: { children: ReactNode }) {
               </div>
             )}
             {pathname !== "/profile" && (
-              <Link href="/profile" className="rounded-xl px-3 py-2 text-sm font-semibold text-[#6b7684] hover:bg-[#f2f4f6] hover:text-[#333d4b]">
+              <Link href="/profile" className="rounded-xl px-3 py-2 text-body font-bold text-[#6b7684] hover:bg-[#f2f4f6] hover:text-[#333d4b]">
                 다시 계산
               </Link>
             )}
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-5 py-8 sm:px-7 sm:py-12">{children}</main>
+      <main className="mx-auto max-w-7xl px-5 py-8 sm:px-7 sm:py-12">{children}</main>
     </div>
   );
 }

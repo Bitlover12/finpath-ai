@@ -4,7 +4,8 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Shell } from "../../components/Shell";
 import { analyze, checkEligibility, getPolicies } from "../../lib/api";
-import { applicationLabel, eligibilityLabel, policyRank, policySummary } from "../../lib/policyPreview";
+import { applicationLabel, policyBadgeStatus, policySortRank, policySummary } from "../../lib/policyPreview";
+import { Badge } from "../../components/Badge";
 import { saveAnalysis } from "../../lib/storage";
 import type { EligibilityResult, PolicyCatalogItem, UserProfile } from "../../lib/types";
 
@@ -33,31 +34,28 @@ function money(n: number | null | undefined) {
   return `${Math.round(n || 0).toLocaleString("ko-KR")}원`;
 }
 
-function statusTone(result?: EligibilityResult) {
-  if (result?.status === "ELIGIBLE") return "text-[#00a86b] bg-[#e8f8f1]";
-  if (result?.status === "NEEDS_MORE_INFORMATION") return "text-[#b7791f] bg-[#fff7e6]";
-  return "text-[#8b95a1] bg-[#f2f4f6]";
-}
-
 function CompactPolicy({ policy, result }: { policy: PolicyCatalogItem; result?: EligibilityResult }) {
   const summary = policySummary(policy);
+  const badge = policyBadgeStatus(result?.status, policy.application_status);
+  // 배지가 이미 모집 상태를 담고 있으면(upcoming/closed/check) 아래 라벨 줄은 중복 → 숨김
+  const showAppLabel = badge === "eligible" || badge === "conditional" || badge === "ineligible" || badge === "pending";
   return (
     <div className="py-5 first:pt-0 last:pb-0">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="truncate text-[15px] font-bold text-[#333d4b]">{policy.name}</h3>
-            <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${statusTone(result)}`}>{eligibilityLabel(result, policy)}</span>
+            <h3 className="truncate text-body font-bold text-[#333d4b]">{policy.name}</h3>
+            <Badge status={badge} />
           </div>
-          <p className="mt-2 line-clamp-2 text-[13px] leading-5 text-[#6b7684]">{summary.target.slice(0, 3).join(" · ") || "공식 공고 요건 확인"}</p>
-          <p className="mt-1 text-[13px] font-semibold text-[#3182f6]">{summary.benefit.slice(0, 3).join(" · ")}</p>
+          <p className="mt-2 line-clamp-2 text-body leading-5 text-[#6b7684]">{summary.target.slice(0, 3).join(" · ") || "공식 공고 요건 확인"}</p>
+          <p className="mt-1 text-caption font-bold text-[#3182f6]">{summary.benefit.slice(0, 3).join(" · ")}</p>
         </div>
-        <a href={policy.source_url} target="_blank" rel="noreferrer" className="shrink-0 text-[12px] font-bold text-[#8b95a1] hover:text-[#3182f6]">공식 정보 ↗</a>
+        <a href={policy.source_url} target="_blank" rel="noreferrer" className="shrink-0 text-caption font-bold text-[#8b95a1] hover:text-[#3182f6]">공식 정보 ↗</a>
       </div>
       {result?.status === "NEEDS_MORE_INFORMATION" && summary.extra.length > 0 && (
-        <p className="mt-2 text-[12px] leading-5 text-[#8b95a1]">추가 확인 · {summary.extra.slice(0, 2).join(" · ")}{summary.extra.length > 2 ? ` 외 ${summary.extra.length - 2}개` : ""}</p>
+        <p className="mt-2 text-caption leading-5 text-[#8b95a1]">추가 확인 · {summary.extra.slice(0, 2).join(" · ")}{summary.extra.length > 2 ? ` 외 ${summary.extra.length - 2}개` : ""}</p>
       )}
-      <p className="mt-1 text-[11px] text-[#b0b8c1]">{applicationLabel(policy.application_status)}</p>
+      {showAppLabel && <p className="mt-1 text-caption text-[#b0b8c1]">{applicationLabel(policy.application_status)}</p>}
     </div>
   );
 }
@@ -96,7 +94,7 @@ export default function ProfilePage() {
   }, [profile]);
 
   const byId = useMemo(() => new Map(eligibility.map((r) => [r.policy_id, r])), [eligibility]);
-  const sortedPolicies = useMemo(() => [...policies].sort((a, b) => policyRank(byId.get(a.id), a) - policyRank(byId.get(b.id), b)), [policies, byId]);
+  const sortedPolicies = useMemo(() => [...policies].sort((a, b) => policySortRank(byId.get(a.id)?.status, a.application_status) - policySortRank(byId.get(b.id)?.status, b.application_status)), [policies, byId]);
   const activeCandidates = sortedPolicies.filter((p) => {
     const r = byId.get(p.id);
     return r && r.status !== "INELIGIBLE" && ["OPEN", "UPCOMING"].includes(p.application_status);
@@ -118,7 +116,7 @@ export default function ProfilePage() {
 
   return (
     <Shell>
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <div className="max-w-2xl">
           <p className="fp-label">1 · 내 금융 트윈</p>
           <h1 className="fp-title mt-2">몇 가지만 알려주시면, 볼 필요 없는 정책부터 지울게요.</h1>
@@ -128,59 +126,59 @@ export default function ProfilePage() {
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
           <form onSubmit={submit} className="fp-panel overflow-hidden">
             <section className="p-6 sm:p-8">
-              <p className="text-[17px] font-black">기본 조건</p>
+              <p className="text-body font-extrabold">기본 조건</p>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                <label className="text-sm font-semibold text-[#4e5968]">나이<input className="fp-input" type="number" min={15} max={80} value={profile.age} onChange={(e)=>set("age",Number(e.target.value))}/></label>
-                <label className="text-sm font-semibold text-[#4e5968]">거주지역<select className="fp-input" value={profile.region} onChange={(e)=>set("region",e.target.value)}>{regionOptions.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>
+                <label className="text-body font-bold text-[#4e5968]">나이<input className="fp-input" type="number" min={15} max={80} value={profile.age} onChange={(e)=>set("age",Number(e.target.value))}/></label>
+                <label className="text-body font-bold text-[#4e5968]">거주지역<select className="fp-input" value={profile.region} onChange={(e)=>set("region",e.target.value)}>{regionOptions.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>
               </div>
             </section>
 
             <section className="border-t border-[#edf0f3] p-6 sm:p-8">
-              <p className="text-[17px] font-black">일과 소득</p>
+              <p className="text-body font-extrabold">일과 소득</p>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                <label className="text-sm font-semibold text-[#4e5968]">고용형태<select className="fp-input" value={profile.employment_type} onChange={(e)=>set("employment_type",e.target.value)}>{employmentOptions.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>
-                <label className="text-sm font-semibold text-[#4e5968]">기업규모<select className="fp-input" value={profile.company_size} onChange={(e)=>set("company_size",e.target.value)}>{companyOptions.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>
-                <label className="text-sm font-semibold text-[#4e5968]">연소득<input className="fp-input" type="number" step={100000} min={0} value={profile.annual_income} onChange={(e)=>set("annual_income",Number(e.target.value))}/><span className="mt-1.5 block text-xs font-normal text-[#8b95a1]">{money(profile.annual_income)}</span></label>
-                <label className="text-sm font-semibold text-[#4e5968]">재직기간<input className="fp-input" type="number" min={0} value={profile.employment_months} onChange={(e)=>set("employment_months",Number(e.target.value))}/><span className="mt-1.5 block text-xs font-normal text-[#8b95a1]">{profile.employment_months}개월</span></label>
-                <label className="text-sm font-semibold text-[#4e5968] sm:col-span-2">가구소득 <span className="font-normal text-[#8b95a1]">(선택)</span><input className="fp-input" type="number" step={100000} min={0} value={profile.household_income ?? ""} onChange={(e)=>set("household_income",e.target.value === "" ? null : Number(e.target.value))}/></label>
+                <label className="text-body font-bold text-[#4e5968]">고용형태<select className="fp-input" value={profile.employment_type} onChange={(e)=>set("employment_type",e.target.value)}>{employmentOptions.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>
+                <label className="text-body font-bold text-[#4e5968]">기업규모<select className="fp-input" value={profile.company_size} onChange={(e)=>set("company_size",e.target.value)}>{companyOptions.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>
+                <label className="text-body font-bold text-[#4e5968]">연소득<input className="fp-input" type="number" step={100000} min={0} value={profile.annual_income} onChange={(e)=>set("annual_income",Number(e.target.value))}/><span className="mt-1.5 block text-caption font-normal text-[#8b95a1]">{money(profile.annual_income)}</span></label>
+                <label className="text-body font-bold text-[#4e5968]">재직기간<input className="fp-input" type="number" min={0} value={profile.employment_months} onChange={(e)=>set("employment_months",Number(e.target.value))}/><span className="mt-1.5 block text-caption font-normal text-[#8b95a1]">{profile.employment_months}개월</span></label>
+                <label className="text-body font-bold text-[#4e5968] sm:col-span-2">가구소득 <span className="font-normal text-[#8b95a1]">(선택)</span><input className="fp-input" type="number" step={100000} min={0} value={profile.household_income ?? ""} onChange={(e)=>set("household_income",e.target.value === "" ? null : Number(e.target.value))}/></label>
               </div>
             </section>
 
             <section className="border-t border-[#edf0f3] p-6 sm:p-8">
-              <p className="text-[17px] font-black">내 자산 목표</p>
+              <p className="text-body font-extrabold">내 자산 목표</p>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                <label className="text-sm font-semibold text-[#4e5968]">현재 자산<input className="fp-input" type="number" step={100000} min={0} value={profile.current_assets} onChange={(e)=>set("current_assets",Number(e.target.value))}/><span className="mt-1.5 block text-xs font-normal text-[#8b95a1]">{money(profile.current_assets)}</span></label>
-                <label className="text-sm font-semibold text-[#4e5968]">월 저축 가능액<input className="fp-input" type="number" step={10000} min={0} value={profile.monthly_saving_capacity} onChange={(e)=>set("monthly_saving_capacity",Number(e.target.value))}/><span className="mt-1.5 block text-xs font-normal text-[#8b95a1]">{money(profile.monthly_saving_capacity)}</span></label>
-                <label className="text-sm font-semibold text-[#4e5968]">목표자산<input className="fp-input" type="number" step={100000} min={0} value={profile.target_assets} onChange={(e)=>set("target_assets",Number(e.target.value))}/><span className="mt-1.5 block text-xs font-normal text-[#8b95a1]">{money(profile.target_assets)}</span></label>
-                <label className="text-sm font-semibold text-[#4e5968]">목표기간<input className="fp-input" type="number" min={1} max={40} value={profile.target_years} onChange={(e)=>set("target_years",Number(e.target.value))}/><span className="mt-1.5 block text-xs font-normal text-[#8b95a1]">{profile.target_years}년</span></label>
+                <label className="text-body font-bold text-[#4e5968]">현재 자산<input className="fp-input" type="number" step={100000} min={0} value={profile.current_assets} onChange={(e)=>set("current_assets",Number(e.target.value))}/><span className="mt-1.5 block text-caption font-normal text-[#8b95a1]">{money(profile.current_assets)}</span></label>
+                <label className="text-body font-bold text-[#4e5968]">월 저축 가능액<input className="fp-input" type="number" step={10000} min={0} value={profile.monthly_saving_capacity} onChange={(e)=>set("monthly_saving_capacity",Number(e.target.value))}/><span className="mt-1.5 block text-caption font-normal text-[#8b95a1]">{money(profile.monthly_saving_capacity)}</span></label>
+                <label className="text-body font-bold text-[#4e5968]">목표자산<input className="fp-input" type="number" step={100000} min={0} value={profile.target_assets} onChange={(e)=>set("target_assets",Number(e.target.value))}/><span className="mt-1.5 block text-caption font-normal text-[#8b95a1]">{money(profile.target_assets)}</span></label>
+                <label className="text-body font-bold text-[#4e5968]">목표기간<input className="fp-input" type="number" min={1} max={40} value={profile.target_years} onChange={(e)=>set("target_years",Number(e.target.value))}/><span className="mt-1.5 block text-caption font-normal text-[#8b95a1]">{profile.target_years}년</span></label>
               </div>
             </section>
 
             <div className="border-t border-[#edf0f3] bg-[#fbfcfd] p-6 sm:flex sm:items-center sm:justify-between sm:px-8">
-              <p className="text-[13px] leading-5 text-[#8b95a1]">입력값은 계산에만 사용하고 서버에 영구 저장하지 않습니다.</p>
+              <p className="text-caption leading-5 text-[#8b95a1]">입력값은 계산에만 사용하고 서버에 영구 저장하지 않습니다.</p>
               <button type="submit" disabled={loading} className="fp-primary mt-4 w-full sm:mt-0 sm:w-auto sm:min-w-[180px]">{loading ? "경로 계산 중..." : "내 경로 계산하기"}</button>
-              {error && <p className="mt-3 text-sm font-semibold text-rose-600 sm:absolute">{error}</p>}
+              {error && <p className="mt-3 text-body font-bold text-rose-600 sm:absolute">{error}</p>}
             </div>
           </form>
 
           <aside className="lg:sticky lg:top-24">
             <div className="fp-panel p-6">
               <div className="flex items-start justify-between gap-3">
-                <div><p className="fp-label">정책 미리보기</p><h2 className="mt-1 text-[22px] font-black tracking-[-0.035em]">지금 볼 정책 {activeCandidates.length}개</h2></div>
-                {previewLoading && <span className="text-xs font-semibold text-[#8b95a1]">확인 중</span>}
+                <div><p className="fp-label">정책 미리보기</p><h2 className="mt-1 text-heading font-extrabold tracking-[-0.035em]">지금 볼 정책 {activeCandidates.length}개</h2></div>
+                {previewLoading && <span className="text-caption font-bold text-[#8b95a1]">확인 중</span>}
               </div>
-              <div className="mt-4 flex gap-5 border-b border-[#edf0f3] pb-4 text-sm">
+              <div className="mt-4 flex gap-5 border-b border-[#edf0f3] pb-4 text-body">
                 <span><b className="text-[#00a86b]">{confirmed}</b><span className="ml-1 text-[#8b95a1]">조건상 가능</span></span>
                 <span><b className="text-[#b7791f]">{needs}</b><span className="ml-1 text-[#8b95a1]">추가 확인</span></span>
               </div>
-              {previewError ? <p className="mt-5 text-sm text-rose-600">{previewError}</p> : activeCandidates.length === 0 ? <div className="py-8 text-center"><p className="font-bold">현재 모집 기준 후보가 없어요.</p><p className="mt-2 text-sm leading-6 text-[#8b95a1]">그래도 일반저축 기준 목표 계산은 계속할 수 있습니다.</p></div> : <div className="divide-y divide-[#edf0f3]">{activeCandidates.slice(0,4).map((policy)=><CompactPolicy key={policy.id} policy={policy} result={byId.get(policy.id)}/>)}</div>}
+              {previewError ? <p className="mt-5 text-body text-rose-600">{previewError}</p> : activeCandidates.length === 0 ? <div className="py-8 text-center"><p className="font-bold">현재 모집 기준 후보가 없어요.</p><p className="mt-2 text-body leading-6 text-[#8b95a1]">그래도 일반저축 기준 목표 계산은 계속할 수 있습니다.</p></div> : <div className="divide-y divide-[#edf0f3]">{activeCandidates.slice(0,4).map((policy)=><CompactPolicy key={policy.id} policy={policy} result={byId.get(policy.id)}/>)}</div>}
 
               <details className="mt-5 border-t border-[#edf0f3] pt-4">
-                <summary className="cursor-pointer text-sm font-bold text-[#6b7684]">전체 정책 {policies.length}개 조건 보기</summary>
+                <summary className="cursor-pointer text-body font-bold text-[#6b7684]">전체 정책 {policies.length}개 조건 보기</summary>
                 <div className="mt-3 max-h-[360px] divide-y divide-[#edf0f3] overflow-y-auto pr-1">{sortedPolicies.map((policy)=><CompactPolicy key={policy.id} policy={policy} result={byId.get(policy.id)}/>)}</div>
               </details>
             </div>
-            <p className="mt-4 px-1 text-[12px] leading-5 text-[#8b95a1]">여기서는 1차 필터만 보여드립니다. 중위소득·건보료·증빙처럼 자동 확인이 어려운 조건은 다음 단계에서 따로 확인해요.</p>
+            <p className="mt-4 px-1 text-caption leading-5 text-[#8b95a1]">여기서는 1차 필터만 보여드립니다. 중위소득·건보료·증빙처럼 자동 확인이 어려운 조건은 다음 단계에서 따로 확인해요.</p>
           </aside>
         </div>
       </div>
