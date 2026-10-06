@@ -96,12 +96,43 @@ export function eligibilityTone(result: EligibilityResult | undefined, policy: P
   return "border-indigo-200 bg-indigo-50/40";
 }
 
-export function policyRank(result: EligibilityResult | undefined, policy: PolicyCatalogItem) {
-  if (!result) return 99;
-  if (result.status === "ELIGIBLE" && policy.application_status === "OPEN") return 0;
-  if (result.status === "ELIGIBLE" && policy.application_status === "UPCOMING") return 1;
-  if (result.status === "NEEDS_MORE_INFORMATION" && ["OPEN", "UPCOMING"].includes(policy.application_status)) return 2;
-  if (result.status === "ELIGIBLE") return 3;
-  if (result.status === "NEEDS_MORE_INFORMATION") return 4;
-  return 5;
+type EligStatus = "ELIGIBLE" | "INELIGIBLE" | "NEEDS_MORE_INFORMATION";
+type AppStatus = "OPEN" | "UPCOMING" | "CLOSED" | "CHECK_REQUIRED";
+export type PolicyBadgeStatus = "eligible" | "conditional" | "upcoming" | "closed" | "check" | "ineligible" | "pending";
+
+/**
+ * 배지 상태. application_status를 우선 판정한다.
+ * - 마감/일정 미확정 → closed
+ * - 조건 미충족 → ineligible (모집 예정이어도 가입 대상이 아니므로 우선)
+ * - 모집 예정 → upcoming (아직 신청할 수 없음)
+ * - 지금 신청 가능 + 조건 충족 → eligible / 확인 필요 → conditional
+ */
+export function policyBadgeStatus(eligibility: EligStatus | null | undefined, appStatus: AppStatus): PolicyBadgeStatus {
+  if (!eligibility) return "pending";
+  if (appStatus === "CLOSED") return "closed";
+  if (appStatus === "CHECK_REQUIRED") return "check";
+  if (eligibility === "INELIGIBLE") return "ineligible";
+  if (appStatus === "UPCOMING") return "upcoming";
+  if (eligibility === "ELIGIBLE") return "eligible";
+  return "conditional";
+}
+
+/**
+ * 정렬 우선순위 (낮을수록 위). "지금 행동 가능한 것"을 최상단에 둔다.
+ * analysis · profile 두 페이지가 공유. 동순위는 stable sort로 카탈로그 원본 순서 유지.
+ */
+export function policySortRank(eligibility: EligStatus | null | undefined, appStatus: AppStatus): number {
+  const open = appStatus === "OPEN";
+  const upcoming = appStatus === "UPCOMING";
+  const deferred = appStatus === "CLOSED" || appStatus === "CHECK_REQUIRED";
+  if (!eligibility) return 8;
+  if (deferred) return 7;
+  // 지금 신청 가능(OPEN)이 조건만 맞는 모집 예정(UPCOMING)보다 위.
+  if (eligibility === "ELIGIBLE" && open) return 0;
+  if (eligibility === "NEEDS_MORE_INFORMATION" && open) return 1;
+  if (eligibility === "ELIGIBLE" && upcoming) return 2;
+  if (eligibility === "NEEDS_MORE_INFORMATION" && upcoming) return 3;
+  if (eligibility === "ELIGIBLE") return 4;
+  if (eligibility === "NEEDS_MORE_INFORMATION") return 5;
+  return 6; // INELIGIBLE + 모집 중/예정
 }

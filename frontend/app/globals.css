@@ -23,11 +23,11 @@ summary::-webkit-details-marker { display: none; }
 summary { list-style: none; }
 
 @layer components {
-  .fp-panel { @apply rounded-[24px] border border-[#edf0f3] bg-white; }
-  .fp-label { @apply text-[13px] font-semibold text-[#8b95a1]; }
-  .fp-title { @apply text-[28px] font-black tracking-[-0.04em] text-[#191f28] sm:text-[34px]; }
-  .fp-muted { @apply text-[14px] leading-6 text-[#6b7684]; }
-  .fp-input { @apply mt-2 w-full rounded-[14px] border border-[#e5e8eb] bg-white px-4 py-3.5 text-[15px] font-semibold text-[#333d4b]; }
-  .fp-primary { @apply inline-flex items-center justify-center rounded-[14px] bg-[#3182f6] px-5 py-3.5 text-[15px] font-bold text-white hover:bg-[#1b64da]; }
-  .fp-secondary { @apply inline-flex items-center justify-center rounded-[14px] bg-[#f2f4f6] px-5 py-3.5 text-[15px] font-bold text-[#4e5968] hover:bg-[#e9ecef]; }
+  .fp-panel { @apply rounded-[24px] border border-line bg-white; }
+  .fp-label { @apply text-caption font-bold text-subtle; }
+  .fp-title { @apply text-display font-extrabold tracking-[-0.04em] text-ink sm:text-hero; }
+  .fp-muted { @apply text-body text-muted; }
+  .fp-input { @apply mt-2 w-full rounded-[14px] border border-[#e5e8eb] bg-white px-4 py-3.5 text-body font-semibold text-[#333d4b]; }
+  .fp-primary { @apply inline-flex items-center justify-center rounded-[14px] bg-accent px-5 py-3.5 text-body font-bold text-white hover:bg-[#1b64da]; }
+  .fp-secondary { @apply inline-flex items-center justify-center rounded-[14px] bg-neutral-bg px-5 py-3.5 text-body font-bold text-[#4e5968] hover:bg-[#e9ecef]; }
 }

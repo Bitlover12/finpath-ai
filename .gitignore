@@ -11,3 +11,4 @@ frontend/.env.local
 .idea/
 .vscode/
 .DS_Store
+frontend/tsconfig.tsbuildinfo
